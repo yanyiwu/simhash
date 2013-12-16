@@ -1,4 +1,4 @@
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
-ADD_EXECUTABLE(simhash.demo main.cpp)
+INSTALL(FILES HttpReqInfo.hpp ServerFrame.hpp ThreadManager.hpp DESTINATION include/CppJieba/Husky)

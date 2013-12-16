@@ -1,0 +1,12 @@
+*tmp*
+tags
+*swp
+*.out
+*.o
+*.d
+*.ut
+log
+*.log
+*.pyc
+*.pyo
+*.a
