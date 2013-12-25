@@ -14,9 +14,39 @@
 ## 依赖
 
 * cmake
-* g++ version >= 4.3
+* g++ (version >= 4.3)
 
 
+## 运行和使用
+
+```sh
+mkdir build
+cd build
+cmake ..
+make
+```
+
+### demo 
+
+```sh
+./bin/simhash.demo
+```
+
+you will see:
+```
+[我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰。] 的simhash值是: 7165879043933747397
+```
+
+### 用法
+
+功能代码都写成hpp文件，直接include即可使用。
+
+上面的 `simhash.demo` 是由 `src/main.cpp` 生成。
+
+所以关于simhash的用法请看`src/main.cpp`，很简单，就几行代码。
+
+
+__此项目暂时只经过简单的单元测试，不保证所有case正确__
 
 ## 客服
 
