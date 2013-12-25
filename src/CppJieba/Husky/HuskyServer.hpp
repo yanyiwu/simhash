@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <cassert>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
@@ -28,7 +29,7 @@ namespace Husky
     using namespace Limonp;
     typedef	int SOCKET;
     const struct timeval SOCKET_TIMEOUT = {2, 0};
-    const char* const RESPONSE_FORMAT = "HTTP/1.1 200 OK\r\nConnection: close\r\nServer: FrameServer/1.0.0\r\nContent-Type: text/json; charset=%s\r\nContent-Length: %d\r\n\r\n";
+    const char* const RESPONSE_FORMAT = "HTTP/1.1 200 OK\r\nConnection: close\r\nServer: HuskyServer/1.0.0\r\nContent-Type: text/json; charset=%s\r\nContent-Length: %d\r\n\r\n";
     const char* const RESPONSE_CHARSET_UTF8 = "UTF-8";
     const char* const RESPONSE_CHARSET_GB2312 = "GB2312";
     const char* const CLIENT_IP_K = "CLIENT_IP"; 
@@ -40,9 +41,6 @@ namespace Husky
         public:
             virtual ~IRequestHandler(){};
         public:
-            virtual bool init() = 0;
-            virtual bool dispose() = 0;
-
             virtual bool do_GET(const HttpReqInfo& httpReq, string& res) = 0;
 
     };
@@ -55,21 +53,22 @@ namespace Husky
         bool * pShutdown;
     };
 
-    class ServerFrame//: public IWorkHandler
+    class HuskyServer
     {
         private:
             pthread_mutex_t m_pmAccept;
             bool m_bShutdown;
         public:
-            ServerFrame(unsigned nPort, unsigned nThreadCount, IRequestHandler* pHandler)
+            explicit HuskyServer(unsigned nPort, unsigned nThreadCount, IRequestHandler* pHandler)
             {
+                m_bShutdown = false;
                 m_nLsnPort = nPort;
                 m_nThreadCount = nThreadCount;
                 m_pHandler = pHandler;
-                m_bShutdown = false;
+                assert(pHandler);
                 pthread_mutex_init(&m_pmAccept,NULL);
             };
-            virtual ~ServerFrame(){pthread_mutex_destroy(&m_pmAccept);};
+            virtual ~HuskyServer(){pthread_mutex_destroy(&m_pmAccept);};
             virtual bool init()  
             {
 
@@ -80,11 +79,6 @@ namespace Husky
                 }
                 LogInfo("init ok {port:%d, threadNum:%d}", m_nLsnPort, m_nThreadCount);
 
-                if(!m_pHandler->init())
-                {
-                    LogFatal("m_pHandler init failed.");
-                    return false;
-                }
                 return true;
             }
             virtual bool dispose()    
@@ -95,7 +89,6 @@ namespace Husky
                     LogError("error [%s]", strerror(errno));
                     return false;
                 }
-
 
                 int sockfd;
                 struct sockaddr_in dest;
@@ -120,10 +113,6 @@ namespace Husky
                     LogError("error [%s]", strerror(errno));
                 }
                 close(sockfd);
-                if(!m_pHandler->dispose())
-                {
-                    LogFatal("m_pHandler dispose failed.");
-                }
                 return true;
             }
             virtual bool run()
@@ -303,8 +292,6 @@ namespace Husky
             u_short  m_nThreadCount;
             SOCKET   m_lsnSock;
             IRequestHandler *m_pHandler;
-            //static bool m_bShutdown;
-            //static pthread_mutex_t m_pmAccept;
 
     }; 
 

@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "Limonp/Config.hpp"
-#include "Husky/ServerFrame.hpp"
+#include "Husky/HuskyServer.hpp"
 #include "MPSegment.hpp"
 #include "HMMSegment.hpp"
 #include "MixSegment.hpp"
@@ -15,10 +15,8 @@ using namespace CppJieba;
 class ReqHandler: public IRequestHandler
 {
     public:
-        ReqHandler(const string& dictPath, const string& modelPath): _segment(dictPath.c_str(), modelPath.c_str()){};
+        ReqHandler(const string& dictPath, const string& modelPath): _segment(dictPath, modelPath){};
         virtual ~ReqHandler(){};
-        virtual bool init(){return _segment.init();};
-        virtual bool dispose(){return _segment.dispose();};
     public:
         virtual bool do_GET(const HttpReqInfo& httpReq, string& strSnd)
         {
@@ -40,8 +38,8 @@ bool run(int argc, char** argv)
     {
         return false;
     }
-    Config conf;
-    if(!conf.loadFile(argv[1]))
+    Config conf(argv[1]);
+    if(!conf)
     {
         return false;
     }
@@ -92,7 +90,7 @@ bool run(int argc, char** argv)
     }
 
     ReqHandler reqHandler(dictPath, modelPath);
-    ServerFrame sf(port, threadNum, &reqHandler);
+    HuskyServer sf(port, threadNum, &reqHandler);
     return sf.init() && sf.run();
 }
 

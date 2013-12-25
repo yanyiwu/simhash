@@ -14,111 +14,123 @@ namespace CppJieba
             MPSegment _mpSeg;
             HMMSegment _hmmSeg;
         public:
-            MixSegment(const char * const mpSegDict, const char * const hmmSegDict): _mpSeg(mpSegDict), _hmmSeg(hmmSegDict)
+            MixSegment(){_setInitFlag(false);};
+            explicit MixSegment(const string& mpSegDict, const string& hmmSegDict)
             {
+                _setInitFlag(init(mpSegDict, hmmSegDict));
             }
-            virtual ~MixSegment()
-            {
-                dispose();
-            }
+            virtual ~MixSegment(){}
         public:
-            virtual bool init()
+            bool init(const string& mpSegDict, const string& hmmSegDict)
             {
                 if(_getInitFlag())
                 {
                     LogError("inited.");
                     return false;
                 }
-                if(!_mpSeg.init())
+                if(!_mpSeg.init(mpSegDict))
                 {
                     LogError("_mpSeg init");
                     return false;
                 }
-                if(!_hmmSeg.init())
+                if(!_hmmSeg.init(hmmSegDict))
                 {
                     LogError("_hmmSeg init");
                     return false;
                 }
+                LogInfo("MixSegment init(%s, %s)", mpSegDict.c_str(), hmmSegDict.c_str());
                 return _setInitFlag(true);
-            }
-            virtual bool dispose()
-            {
-                if(!_getInitFlag())
-                {
-                    return true;
-                }
-                _mpSeg.dispose();
-                _hmmSeg.dispose();
-                _setInitFlag(false);
-                return true;
             }
         public:
             using SegmentBase::cut;
         public:
-            virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
+            virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<Unicode>& res) const
             {
-                //if(!_getInitFlag())
-                //{
-                //    LogError("not inited.");
-                //    return false;
-                //}
                 assert(_getInitFlag());
-                if(begin == end)
+                if(begin >= end)
                 {
+                    LogError("begin >= end");
                     return false;
                 }
+
                 vector<TrieNodeInfo> infos;
                 if(!_mpSeg.cut(begin, end, infos))
                 {
                     LogError("mpSeg cutDAG failed.");
                     return false;
                 }
-                Unicode unico;
+
                 vector<Unicode> hmmRes;
-                string tmp;
-                for(uint i= 0; i < infos.size(); i++)
+                Unicode piece;
+                for (uint i = 0, j = 0; i < infos.size(); i++)
                 {
-                    TransCode::encode(infos[i].word,tmp);
-                    if(1 == infos[i].word.size())
+                    //if mp get a word, it's ok, put it into result
+                    if (1 != infos[i].word.size())
                     {
-                        unico.push_back(infos[i].word[0]);
+                        res.push_back(infos[i].word);
+                        continue;
                     }
-                    else
+
+                    // if mp get a single one, collect it in sequence
+                    j = i;
+                    while (j < infos.size() && infos[j].word.size() == 1)
                     {
-                        if(!unico.empty())
-                        {
-                            hmmRes.clear();
-                            if(!_hmmSeg.cut(unico.begin(), unico.end(), hmmRes))
-                            {
-                                LogError("_hmmSeg cut failed.");
-                                return false;
-                            }
-                            for(uint j = 0; j < hmmRes.size(); j++)
-                            {
-                                TransCode::encode(hmmRes[j], tmp);
-                                res.push_back(tmp);
-                            }
-                        }
-                        unico.clear();
-                        TransCode::encode(infos[i].word, tmp);
-                        res.push_back(tmp);
+                        piece.push_back(infos[j].word[0]);
+                        j++;
                     }
-                }
-                if(!unico.empty())
-                {
-                    hmmRes.clear();
-                    if(!_hmmSeg.cut(unico.begin(), unico.end(), hmmRes))
+
+                    // cut the sequence with hmm
+                    if (!_hmmSeg.cut(piece.begin(), piece.end(), hmmRes))
                     {
                         LogError("_hmmSeg cut failed.");
                         return false;
                     }
-                    for(uint j = 0; j < hmmRes.size(); j++)
+
+                    //put hmm result to return
+                    for (uint k = 0; k < hmmRes.size(); k++)
                     {
-                        TransCode::encode(hmmRes[j], tmp);
-                        res.push_back(tmp);
+                        res.push_back(hmmRes[k]);
                     }
+
+                    //clear tmp vars
+                    piece.clear();
+                    hmmRes.clear();
+
+                    //let i jump over this piece
+                    i = j - 1;
                 }
 
+                return true;
+            }
+
+            virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
+            {
+                assert(_getInitFlag());
+                if(begin >= end)
+                {
+                    LogError("begin >= end");
+                    return false;
+                }
+
+                vector<Unicode> uRes;
+                if (!cut(begin, end, uRes))
+                {
+                    LogError("get unicode cut result error.");
+                    return false;
+                }
+
+                string tmp;
+                for (vector<Unicode>::const_iterator uItr = uRes.begin(); uItr != uRes.end(); uItr++)
+                {
+                    if (TransCode::encode(*uItr, tmp))
+                    {
+                        res.push_back(tmp);
+                    }
+                    else
+                    {
+                        LogError("encode failed.");
+                    }
+                }
                 return true;
             }
     };

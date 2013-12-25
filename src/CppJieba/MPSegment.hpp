@@ -10,6 +10,7 @@
 #include <cassert>
 #include "Limonp/logger.hpp"
 #include "Trie.hpp"
+#include "TrieManager.hpp"
 #include "ISegment.hpp"
 #include "SegmentBase.hpp"
 
@@ -31,54 +32,37 @@ namespace CppJieba
 
     class MPSegment: public SegmentBase
     {
-        private:
-            Trie _trie;
-        private:
-            const string _dictPath;
+        protected:
+            Trie* _trie;
 
         public:
-            MPSegment(const char * const dictPath): _dictPath(dictPath){};
-            virtual ~MPSegment(){dispose();};
+            MPSegment(){_setInitFlag(false);};
+            explicit MPSegment(const string& dictPath)
+            {
+                _setInitFlag(init(dictPath));
+            };
+            virtual ~MPSegment(){};
         public:
-            virtual bool init()
+            bool init(const string& dictPath)
             {
                 if(_getInitFlag())
                 {
                     LogError("already inited before now.");
                     return false;
                 }
-                if(!_trie.init())
+                _trie = TrieManager::getInstance().getTrie(dictPath.c_str());
+                if (_trie == NULL)
                 {
-                    LogError("_trie.init failed.");
+                    LogError("get a NULL pointor form getTrie(\"%s\").", dictPath.c_str());
                     return false;
                 }
-                LogInfo("_trie.loadDict(%s) start...", _dictPath.c_str());
-                if(!_trie.loadDict(_dictPath.c_str()))
-                {
-                    LogError("_trie.loadDict faield.");
-                    return false;
-                }
-                LogInfo("_trie.loadDict end.");
+                LogInfo("MPSegment init(%s) ok", dictPath.c_str());
                 return _setInitFlag(true);
             }
-            virtual bool dispose()
-            {
-                if(!_getInitFlag())
-                {
-                    return true;
-                }
-                _trie.dispose();
-                _setInitFlag(false);
-                return true;
-            }
         public:
+            using SegmentBase::cut;
             virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
             {
-                //if(!_getInitFlag())
-                //{
-                //    LogError("not inited.");
-                //    return false;
-                //}
                 assert(_getInitFlag());
 
                 vector<TrieNodeInfo> segWordInfos;
@@ -145,7 +129,7 @@ namespace CppJieba
                 {
                     SegmentChar schar(*it);
                     uint i = it - begin;
-                    _trie.find(it, end, i, schar.dag);
+                    _trie->find(it, end, i, schar.dag);
                     //DagType::iterator dagIter;
                     if(schar.dag.end() ==  schar.dag.find(i))
                     {
@@ -183,7 +167,7 @@ namespace CppJieba
                         }
                         else
                         {
-                            val += _trie.getMinLogFreq();
+                            val += _trie->getMinLogFreq();
                         }
                         if(val > segContext[i].weight)
                         {
@@ -211,7 +195,7 @@ namespace CppJieba
                         TrieNodeInfo nodeInfo;
                         nodeInfo.word.push_back(segContext[i].uniCh);
                         nodeInfo.freq = 0;
-                        nodeInfo.logFreq = _trie.getMinLogFreq();
+                        nodeInfo.logFreq = _trie->getMinLogFreq();
                         res.push_back(nodeInfo);
                         i++;
                     }

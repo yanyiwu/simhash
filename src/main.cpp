@@ -1,11 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include "CppJieba/Limonp/io_functs.hpp"
+#include "CppJieba/MixSegment.hpp"
 
 using namespace Limonp;
+using namespace CppJieba;
 
+bool cut(ISegment* segHandle, const string& doc, vector<string>& words)
+{
+    return segHandle->cut(doc, words);
+}
 
-bool cut
 
 int main(int argc, char** argv)
 {
@@ -16,5 +21,6 @@ int main(int argc, char** argv)
     }
     string doc;
     loadFile2Str(argv[0], doc);
+    
     return EXIT_SUCCESS;
 }

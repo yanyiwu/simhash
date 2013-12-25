@@ -43,12 +43,13 @@ int main(int argc, char ** argv)
             <<"\t--algorithm\tSupported methods are [cutDAG, cutHMM, cutFull, cutQuery, cutMix] for now. \n\t\t\tIf not specified, the default is cutMix\n"
             <<"\t--dictpath\tsee example\n"
             <<"\t--modelpath\tsee example\n"
-            <<"\t--maxlen\tspecify the granularity of cut used in cutQuery, If not specified, the default is 3\n"
+            <<"\t--maxlen\tspecify the granularity of cut used in cutQuery. \n\t\t\tIf not specified, the default is 3\n"
             <<"example:\n"
-            <<"\t"<<argv[0]<<" ../test/testlines.utf8 --dictpath ../dicts/jieba.dict.utf8 --algorithm cutDAG\n"
-            <<"\t"<<argv[0]<<" ../test/testlines.utf8 --modelpath ../dicts/hmm_model.utf8 --algorithm cutHMM\n"
-            <<"\t"<<argv[0]<<" ../test/testlines.utf8 --dictpath ../dicts/jieba.dict.utf8 --modelpath ../dicts/hmm_model.utf8 --algorithm cutMix\n"
-            <<"\t"<<argv[0]<<" ../test/testlines.utf8 --dictpath ../dicts/jieba.dict.utf8 --modelpath ../dicts/hmm_model.utf8 --algorithm cutQuery --maxlen 3\n"
+            <<"\t"<<argv[0]<<" ../test/testdata/testlines.utf8 --dictpath ../dict/jieba.dict.utf8 --algorithm cutDAG\n"
+            <<"\t"<<argv[0]<<" ../test/testdata/testlines.utf8 --dictpath ../dict/jieba.dict.utf8 --algorithm cutFull\n"
+            <<"\t"<<argv[0]<<" ../test/testdata/testlines.utf8 --modelpath ../dict/hmm_model.utf8 --algorithm cutHMM\n"
+            <<"\t"<<argv[0]<<" ../test/testdata/testlines.utf8 --dictpath ../dict/jieba.dict.utf8 --modelpath ../dict/hmm_model.utf8 --algorithm cutMix\n"
+            <<"\t"<<argv[0]<<" ../test/testdata/testlines.utf8 --dictpath ../dict/jieba.dict.utf8 --modelpath ../dict/hmm_model.utf8 --algorithm cutQuery --maxlen 3\n"
             <<endl;
         
         return EXIT_FAILURE;
@@ -62,57 +63,52 @@ int main(int argc, char ** argv)
     if("cutHMM" == algorithm)
     {
         HMMSegment seg(modelPath.c_str());
-        if(!seg.init())
+        if(!seg)
         {
             cout<<"seg init failed."<<endl;
             return EXIT_FAILURE;
         }
         cut(&seg, arg[1].c_str());
-        seg.dispose();
     }
     else if("cutDAG" == algorithm)
     {
         MPSegment seg(dictPath.c_str());
-        if(!seg.init())
+        if(!seg)
         {
             cout<<"seg init failed."<<endl;
             return false;
         }
         cut(&seg, arg[1].c_str());
-        seg.dispose();
     }
     else if ("cutFull" == algorithm)
     {
         FullSegment seg(dictPath.c_str());
-        if (!seg.init())
+        if (!seg)
         {
             cout << "seg init failed" << endl;
             return false;
         }
         cut(&seg, arg[1].c_str());
-        seg.dispose();
     }
     else if ("cutQuery" == algorithm)
     {
         QuerySegment seg(dictPath.c_str(), modelPath.c_str(), maxLen);
-        if (!seg.init())
+        if (!seg)
         {
             cout << "seg init failed" << endl;
             return false;
         }
         cut(&seg, arg[1].c_str());
-        seg.dispose();
     }
     else 
     {
         MixSegment seg(dictPath.c_str(), modelPath.c_str());
-        if(!seg.init())
+        if(!seg)
         {
             cout<<"seg init failed."<<endl;
             return EXIT_FAILURE;
         }
         cut(&seg, arg[1].c_str());
-        seg.dispose();
     }
     return EXIT_SUCCESS;
 }

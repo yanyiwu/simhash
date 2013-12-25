@@ -17,6 +17,7 @@
 #include "TransCode.hpp"
 
 
+
 namespace CppJieba
 {
     using namespace Limonp;
@@ -50,13 +51,17 @@ namespace CppJieba
         TrieNodeInfo(const Unicode& _word):word(_word),freq(0),logFreq(MIN_DOUBLE)
         {
         }
-        string toString()const
+        bool operator == (const TrieNodeInfo & rhs) const
         {
-            string tmp;
-            TransCode::encode(word, tmp);
-            return string_format("{word:%s,freq:%d, logFreq:%lf}", tmp.c_str(), freq, logFreq);
+            return word == rhs.word && freq == rhs.freq && tag == rhs.tag && abs(logFreq - rhs.logFreq) < 0.001;
         }
     };
+
+    inline ostream& operator << (ostream& os, const TrieNodeInfo & nodeInfo)
+    {
+        return os << nodeInfo.word << ":" << nodeInfo.freq << ":" << nodeInfo.tag << ":" << nodeInfo.logFreq ;
+    }
+
     typedef unordered_map<uint, const TrieNodeInfo*> DagType;
 
     class Trie
@@ -125,26 +130,13 @@ namespace CppJieba
             }
             bool loadDict(const char * const filePath)
             {
-                if(!_getInitFlag())
-                {
-                    LogError("not initted.");
-                    return false;
-                }
-
-                if(!checkFileExist(filePath))
-                {
-                    LogError("cann't find fiel[%s].",filePath);
-                    return false;
-                }
-                bool res = false;
-                res = _trieInsert(filePath);
-                if(!res)
+                assert(_getInitFlag());
+                if(!_trieInsert(filePath))
                 {
                     LogError("_trieInsert failed.");
                     return false;
                 }
-                res = _countWeight();
-                if(!res)
+                if(!_countWeight())
                 {
                     LogError("_countWeight failed.");
                     return false;
@@ -334,15 +326,20 @@ namespace CppJieba
         private:
             bool _trieInsert(const char * const filePath)
             {
-                ifstream ifile(filePath);
+                ifstream ifs(filePath);
+                if(!ifs)
+                {
+                    LogError("open %s failed.", filePath);
+                    return false;
+                }
                 string line;
                 vector<string> vecBuf;
 
                 TrieNodeInfo nodeInfo;
-                while(getline(ifile, line))
+                while(getline(ifs, line))
                 {
                     vecBuf.clear();
-                    splitStr(line, vecBuf, " ");
+                    split(line, vecBuf, " ");
                     if(3 < vecBuf.size())
                     {
                         LogError("line[%s] illegal.", line.c_str());
