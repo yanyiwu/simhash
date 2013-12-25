@@ -1,16 +1,12 @@
 #include <iostream>
 #include <fstream>
-#include "CppJieba/Limonp/io_functs.hpp"
-#include "CppJieba/MixSegment.hpp"
+//#include "CppJieba/KeywordExtractor.hpp"
+#include "Simhash.hpp"
 
-using namespace Limonp;
-using namespace CppJieba;
 
-bool cut(ISegment* segHandle, const string& doc, vector<string>& words)
-{
-    return segHandle->cut(doc, words);
-}
+//const char * const FILE_PATH = "";
 
+using namespace SimhashSpace;
 
 int main(int argc, char** argv)
 {
@@ -19,8 +15,9 @@ int main(int argc, char** argv)
         fprintf(stderr, "usage: %s <filename>", argv[0]);
         return EXIT_FAILURE;
     }
-    string doc;
-    loadFile2Str(argv[0], doc);
+    Simhash sh("dict1", "dict2");
+    //string doc((istreambuf_iterator<char>(agrv[])));
+    //loadFile2Str(argv[0], doc);
     
     return EXIT_SUCCESS;
 }
