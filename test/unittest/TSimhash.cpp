@@ -17,3 +17,14 @@ TEST(SimhashTest, Test1)
     ASSERT_EQ("[\"15142046212652221781:318.452\", \"2117559126361955906:151.001\", \"13004687738940023035:106.978\", \"18264030747823598625:103.739\", \"14309530273629218494:94.7993\"]", res);
 }
 
+TEST(SimhashTest, Test2)
+{
+    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    uint64_t u64;
+    string s;
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
+    ASSERT_TRUE(shash.make(s, 5, u64));
+    string res;
+    res << u64;
+    ASSERT_EQ("15430276588803933269", res);
+}
