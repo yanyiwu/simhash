@@ -28,3 +28,43 @@ TEST(SimhashTest, Test2)
     res << u64;
     ASSERT_EQ("15430276588803933269", res);
 }
+
+TEST(SimhashTest, Test3)
+{
+    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    uint64_t u1, u2;
+    string s1, s2;
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s1));
+    ASSERT_TRUE(shash.make(s1, 50, u1));
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.2", s2));
+    ASSERT_TRUE(shash.make(s2, 50, u2));
+    ASSERT_EQ(u1, u2);
+}
+
+
+TEST(SimhashTest, Test4)
+{
+    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    uint64_t u1, u2;
+    string s1, s2;
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.3", s1));
+    ASSERT_TRUE(shash.make(s1, 50, u1));
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.4", s2));
+    ASSERT_TRUE(shash.make(s2, 50, u2));
+    ASSERT_EQ(u1, u2);
+}
+
+
+TEST(SimhashTest, Test5)
+{
+    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    uint64_t u1, u2;
+    string s1, s2;
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.2", s1));
+    ASSERT_TRUE(shash.make(s1, 50, u1));
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.3", s2));
+    ASSERT_TRUE(shash.make(s2, 50, u2));
+    ASSERT_NE(u1, u2);
+}
+
+
