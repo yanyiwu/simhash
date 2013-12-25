@@ -67,4 +67,25 @@ TEST(SimhashTest, Test5)
     ASSERT_NE(u1, u2);
 }
 
+TEST(SimhashTest, Test6)
+{
+    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    uint64_t u1, u2;
+    string s1, s2, s12, s21;
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s1));
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.3", s2));
+    s12 = s1 + s2;
+    ASSERT_TRUE(shash.make(s12, 50, u1));
+
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.2", s1));
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.4", s2));
+    s21 = s2 + s1;
+    ASSERT_TRUE(shash.make(s21, 50, u2));
+
+    ASSERT_EQ(u1, u2);
+}
+
+
+
+
 
