@@ -19,7 +19,7 @@ namespace SimhashSpace
         public:
             bool dispose(){return false;};
         public:
-            bool make(const string& text, uint topN, uint64_t& v64)
+            bool make(const string& text, uint topN, vector<pair<uint64_t, double> >& res)
             {
                 vector<pair<string, double> > wordweights;
                 if(!extract(text, wordweights, topN))
@@ -27,11 +27,11 @@ namespace SimhashSpace
                     LogError("extract failed.");
                     return false;
                 }
-                
+                res.clear();
                 for(uint i = 0; i < wordweights.size(); i++)
                 {
                     const string& word = wordweights[i].first;
-                    print(_hasher(word.c_str(), word.size(), 0));
+                    res.push_back(make_pair(_hasher(word.c_str(), word.size(), 0), wordweights[i].second));
                 }
 
                 return true;
