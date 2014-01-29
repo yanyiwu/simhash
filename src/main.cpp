@@ -13,6 +13,6 @@ int main(int argc, char** argv)
     uint topN = 5;
     uint64_t u64;
     simhasher.make(s, topN, u64);
-    cout<< "[" << s << "] 的simhash值是: " << u64<<endl;
+    cout<< "\"" << s << "\" 的simhash值是: " << u64<<endl;
     return EXIT_SUCCESS;
 }

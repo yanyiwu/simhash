@@ -7,20 +7,21 @@
 namespace Simhash
 {
     using namespace CppJieba;
-    class Simhasher: public KeywordExtractor
+    class Simhasher: public InitOnOff
     {
         private:
             enum{BITS_LENGTH = 64};
             jenkins _hasher;
+            KeywordExtractor _keywordExtor;
         public:
-            Simhasher(const string& dictPath, const string& idfPath): KeywordExtractor(dictPath, idfPath)
-            {}
+            Simhasher(const string& dictPath, const string& idfPath): _keywordExtor(dictPath, idfPath)
+            {_setInitFlag(_keywordExtor);}
             ~Simhasher(){};
         public:
             bool make(const string& text, uint topN, vector<pair<uint64_t, double> >& res)
             {
                 vector<pair<string, double> > wordweights;
-                if(!extract(text, wordweights, topN))
+                if(!_keywordExtor.extract(text, wordweights, topN))
                 {
                     LogError("extract failed.");
                     return false;
