@@ -45,9 +45,6 @@ you will see:
 
 所以关于simhash的用法请看`src/main.cpp`，很简单，就几行代码。
 
-
-__此项目暂时只经过简单的单元测试，不保证所有case正确__
-
 ## 客服
 
 wuyanyi09@gmail.com
