@@ -5,7 +5,7 @@
 #include <string>
 
 using namespace std;
-using namespace SimhashSpace;
+using namespace Simhash;
 
 TEST(JenkinsTest, Test1)
 {

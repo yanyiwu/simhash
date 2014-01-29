@@ -93,7 +93,7 @@
 
 #include <iostream>
 
-namespace SimhashSpace {
+namespace Simhash {
 	struct jenkins {
 		uint64_t operator()(const char* data, size_t len, uint64_t s) const {
 			uint32_t a = static_cast<uint32_t>(s >> 32);

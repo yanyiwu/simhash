@@ -4,18 +4,18 @@
 #include "CppJieba/KeywordExtractor.hpp"
 #include "hashes/jenkins.h"
 
-namespace SimhashSpace
+namespace Simhash
 {
     using namespace CppJieba;
-    class Simhash: public KeywordExtractor
+    class Simhasher: public KeywordExtractor
     {
         private:
             enum{BITS_LENGTH = 64};
             jenkins _hasher;
         public:
-            Simhash(const string& dictPath, const string& idfPath): KeywordExtractor(dictPath, idfPath)
+            Simhasher(const string& dictPath, const string& idfPath): KeywordExtractor(dictPath, idfPath)
             {}
-            ~Simhash(){};
+            ~Simhasher(){};
         public:
             bool make(const string& text, uint topN, vector<pair<uint64_t, double> >& res)
             {

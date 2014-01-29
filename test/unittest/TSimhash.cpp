@@ -1,11 +1,11 @@
-#include "src/Simhash.hpp"
+#include "src/Simhasher.hpp"
 #include "gtest/gtest.h"
 
-using namespace SimhashSpace;
+using namespace Simhash;
 
-TEST(SimhashTest, Test1)
+TEST(SimhasherTest, Test1)
 {
-    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
     ASSERT_TRUE(shash);
     string s;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
@@ -17,9 +17,9 @@ TEST(SimhashTest, Test1)
     ASSERT_EQ("[\"15142046212652221781:318.452\", \"2117559126361955906:151.001\", \"13004687738940023035:106.978\", \"18264030747823598625:103.739\", \"14309530273629218494:94.7993\"]", res);
 }
 
-TEST(SimhashTest, Test2)
+TEST(SimhasherTest, Test2)
 {
-    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
     uint64_t u64;
     string s;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
@@ -29,9 +29,9 @@ TEST(SimhashTest, Test2)
     ASSERT_EQ("15430276588803933269", res);
 }
 
-TEST(SimhashTest, Test3)
+TEST(SimhasherTest, Test3)
 {
-    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
     uint64_t u1, u2;
     string s1, s2;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s1));
@@ -42,9 +42,9 @@ TEST(SimhashTest, Test3)
 }
 
 
-TEST(SimhashTest, Test4)
+TEST(SimhasherTest, Test4)
 {
-    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
     uint64_t u1, u2;
     string s1, s2;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.3", s1));
@@ -55,9 +55,9 @@ TEST(SimhashTest, Test4)
 }
 
 
-TEST(SimhashTest, Test5)
+TEST(SimhasherTest, Test5)
 {
-    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
     uint64_t u1, u2;
     string s1, s2;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.2", s1));
@@ -67,9 +67,9 @@ TEST(SimhashTest, Test5)
     ASSERT_NE(u1, u2);
 }
 
-//TEST(SimhashTest, Test6)
+//TEST(SimhasherTest, Test6)
 //{
-//    Simhash shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
+//    Simhasher shash("../dict/jieba.dict.utf8", "../dict/idf.utf8");
 //    uint64_t u1, u2;
 //    string s1, s2, s12, s21;
 //    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s1));
