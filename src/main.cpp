@@ -12,7 +12,11 @@ int main(int argc, char** argv)
     string s("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰。");
     uint topN = 5;
     uint64_t u64;
+    vector<pair<string ,double> > res;
+    simhasher.extract(s, res, topN);
     simhasher.make(s, topN, u64);
-    cout<< "\"" << s << "\" 的simhash值是: " << u64<<endl;
+    cout<< "文本：\"" << s << "\"" << endl;
+    cout << "关键词序列是: " << res << endl;
+    cout<< "simhash值是: " << u64<<endl;
     return EXIT_SUCCESS;
 }

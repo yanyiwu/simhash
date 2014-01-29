@@ -18,10 +18,14 @@ namespace Simhash
             {_setInitFlag(_keywordExtor);}
             ~Simhasher(){};
         public:
-            bool make(const string& text, uint topN, vector<pair<uint64_t, double> >& res)
+            bool extract(const string& text, vector<pair<string,double> > & res, uint topN) const
+            {
+                return _keywordExtor.extract(text, res, topN);
+            }
+            bool make(const string& text, uint topN, vector<pair<uint64_t, double> >& res) const
             {
                 vector<pair<string, double> > wordweights;
-                if(!_keywordExtor.extract(text, wordweights, topN))
+                if(!extract(text, wordweights, topN))
                 {
                     LogError("extract failed.");
                     return false;
@@ -36,7 +40,7 @@ namespace Simhash
                 return true;
             }
 
-            bool make(const string& text, uint topN, uint64_t& v64)
+            bool make(const string& text, uint topN, uint64_t& v64) const
             {
                 vector<pair<uint64_t, double> > hashvalues;
                 if(!make(text, topN, hashvalues))
@@ -68,8 +72,6 @@ namespace Simhash
                         v64 |= (u64_1 << j);
                     }
                 }
-                
-                //print(v64);
                 
                 return true;
             }

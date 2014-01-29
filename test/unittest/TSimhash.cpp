@@ -71,8 +71,13 @@ TEST(SimhasherTest, Test6)
 {
     Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/idf.utf8");
     string s("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰。");
+    string res;
     uint topN = 5;
     uint64_t u64;
+    vector<pair<string, double> > wordweights;
+    simhasher.extract(s, wordweights, topN);
+    ASSERT_EQ(res << wordweights, "[\"升职:10.8562\", \"手扶拖拉机:10.0089\", \"加薪:10.6426\", \"迎娶:10.0505\", \"技工:9.84023\"]");
+    
     simhasher.make(s, topN, u64);
     ASSERT_EQ(u64, uint64_t(16380177361115691077u));
 }
