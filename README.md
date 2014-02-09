@@ -1,4 +1,4 @@
-# simhash  
+# simhash  专门针对中文文档的simhash算法
 
 ## 概述
 
@@ -13,8 +13,8 @@
 
 ## 你可能需要安装的
 
-* cmake(version >= 2.8)
-* g++ (version >= 4.7)
+* cmake(version >= 2.8  recommended)
+* g++ (version >= 4.7 recommended)
 
 
 ## 运行和使用
@@ -38,6 +38,8 @@ you will see:
 文本："我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富 美，走上人生巅峰。"
 关键词序列是: ["CEO:11.7392", "白富美:11.7392", "蓝翔:11.7392", "迎娶:10.0505", "加薪:10.6426"]
 simhash值是: 18002950507231148557
+海明距离阈值默认设置为3，则isEqual结果为：0
+海明距离阈值默认设置为5，则isEqual结果为：1
 ```
 
 ### 用法
@@ -52,7 +54,6 @@ simhash值是: 18002950507231148557
 
 wuyanyi09@gmail.com
 
-
+[simhash]:http://aszxqw.com/jekyll/update/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/aszxqw/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h
-[simhash]:http://leoncom.org/?p=650607
