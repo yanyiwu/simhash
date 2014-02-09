@@ -18,5 +18,16 @@ int main(int argc, char** argv)
     cout<< "文本：\"" << s << "\"" << endl;
     cout << "关键词序列是: " << res << endl;
     cout<< "simhash值是: " << u64<<endl;
+
+
+    const char * bin1 = "100010110110";
+    const char * bin2 = "110001110011";
+    uint64_t u1, u2;
+    u1 = Simhasher::binaryStringToUint64(bin1); 
+    u2 = Simhasher::binaryStringToUint64(bin2); 
+    
+    cout<< bin1 << "和" << bin2 << " simhash值的相等判断如下："<<endl;
+    cout<< "海明距离阈值默认设置为3，则isEqual结果为：" << (Simhasher::isEqual(u1, u2)) << endl; 
+    cout<< "海明距离阈值默认设置为5，则isEqual结果为：" << (Simhasher::isEqual(u1, u2, 5)) << endl; 
     return EXIT_SUCCESS;
 }

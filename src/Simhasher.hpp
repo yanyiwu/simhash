@@ -75,6 +75,54 @@ namespace Simhash
                 
                 return true;
             }
+            
+            static bool isEqual(uint64_t lhs, uint64_t rhs, unsigned short n = 3)
+            {
+                unsigned short cnt = 0;
+                lhs ^= rhs;
+                while(lhs && cnt <= n)
+                {
+                    lhs &= lhs - 1;
+                    cnt++;
+                }
+                if(cnt <= n)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            static void toBinaryString(uint64_t req, string& res)
+            {
+                res.resize(64);
+                for(signed i = 63; i >= 0; i--)
+                {
+                    req & 1 ? res[i] = '1' : res[i] = '0';
+                    req >>= 1;
+                }
+            }
+
+            static string toBinaryString(uint64_t req)
+            {
+                string res;
+                toBinaryString(req, res);
+                return res;
+            }
+
+            static uint64_t binaryStringToUint64(const string& bin)
+            {
+                uint64_t res = 0;
+                for(size_t i = 0; i < bin.size(); i++)
+                {
+                    res <<= 1;
+                    if(bin[i] == '1')
+                    {
+                        res += 1;
+                    }
+                }
+                return res;
+            }
+
     };
 }
 
