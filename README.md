@@ -4,7 +4,7 @@
 
 此项目用来对中文文档计算出对于的simhash值
 
-[simhash] 是谷歌用来进行文本去重的算法，现在广泛应用在文本处理中。
+simhash是谷歌用来进行文本去重的算法，现在广泛应用在文本处理中。详见[SimhashBlog]
 
 在计算simhash的过程中我们需要对文本进行分词和关键词抽取，这部分使用[CppJieba]来完成。
 
@@ -55,6 +55,6 @@ simhash值是: 12814523326186814061
 
 wuyanyi09@gmail.com
 
-[simhash]:http://aszxqw.com/jekyll/update/2014/01/30/simhash-shi-xian-xiang-jie.html
+[SimhashBlog]:http://aszxqw.github.io/jekyll/update/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/aszxqw/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h
