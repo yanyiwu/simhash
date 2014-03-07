@@ -79,19 +79,18 @@ TEST(SimhasherTest, Test6)
     Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
     string s("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰。");
     string s2("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰，加薪。");
-    string res;
+    //string res;
     uint topN = 5;
     uint64_t u;
     uint64_t u2;
-    vector<pair<string, double> > wordweights;
-    vector<pair<string, double> > wordweights2;
-    simhasher.extract(s, wordweights, topN);
-    simhasher.extract(s2, wordweights2, topN);
-    res << wordweights;
-    //print(res);
-    ASSERT_EQ(res, "[\"CEO:11.7392\", \"蓝翔:11.7392\", \"白富美:11.7392\", \"升职:10.8562\", \"加薪:10.6426\"]");
-    res << wordweights2;
-    //print(res);
+    //vector<pair<string, double> > wordweights;
+    //vector<pair<string, double> > wordweights2;
+    //simhasher.extract(s, wordweights, topN);
+    //simhasher.extract(s2, wordweights2, topN);
+    //res << wordweights;
+    ////print(res);
+    //res << wordweights2;
+    ////print(res);
     
     simhasher.make(s, topN, u);
     simhasher.make(s2, topN, u2);
