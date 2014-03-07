@@ -1,3 +1,6 @@
+# v0.9.3
+
+1. 更新[CppJieba]用以修复关于头文件包含的小bug
 
 # v0.9.2
 
@@ -8,3 +11,4 @@
 
 1. 完成分词，关键词抽取，simhash值计算的基本功能
 
+[CppJieba]:https://github.com/aszxqw/cppjieba.git
