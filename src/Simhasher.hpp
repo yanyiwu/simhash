@@ -14,7 +14,7 @@ namespace Simhash
             jenkins _hasher;
             KeywordExtractor _keywordExtor;
         public:
-            Simhasher(const string& dictPath, const string& modelPath, const string& idfPath): _keywordExtor(dictPath, modelPath, idfPath)
+            Simhasher(const string& dictPath, const string& modelPath, const string& idfPath, const string& stopWords): _keywordExtor(dictPath, modelPath, idfPath, stopWords)
             {_setInitFlag(_keywordExtor);}
             ~Simhasher(){};
         public:

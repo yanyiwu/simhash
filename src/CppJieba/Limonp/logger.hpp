@@ -12,23 +12,21 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <cassert>
-#include "io_functs.hpp"
-#include "str_functs.hpp"
 
 #define FILE_BASENAME strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
 
-#define LogDebug(fmt, ...) Logger::LoggingF(LL_DEBUG, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
-#define LogInfo(fmt, ...) Logger::LoggingF(LL_INFO, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
-#define LogWarn(fmt, ...) Logger::LoggingF(LL_WARN, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
-#define LogError(fmt, ...) Logger::LoggingF(LL_ERROR, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
-#define LogFatal(fmt, ...) Logger::LoggingF(LL_FATAL, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
+#define LogDebug(fmt, ...) Limonp::Logger::LoggingF(Limonp::LL_DEBUG, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
+#define LogInfo(fmt, ...) Limonp::Logger::LoggingF(Limonp::LL_INFO, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
+#define LogWarn(fmt, ...) Limonp::Logger::LoggingF(Limonp::LL_WARN, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
+#define LogError(fmt, ...) Limonp::Logger::LoggingF(Limonp::LL_ERROR, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
+#define LogFatal(fmt, ...) Limonp::Logger::LoggingF(Limonp::LL_FATAL, FILE_BASENAME, __LINE__, fmt, ## __VA_ARGS__)
 
 
 
 namespace Limonp
 {
     using namespace std;
-    enum {LL_DEBUG = 0, LL_INFO = 1, LL_WARN = 2, LL_ERROR = 3, LL_FATAL = 4, LEVEL_ARRAY_SIZE = 5, CSTR_BUFFER_SIZE = 1024};
+    enum {LL_DEBUG = 0, LL_INFO = 1, LL_WARN = 2, LL_ERROR = 3, LL_FATAL = 4, LEVEL_ARRAY_SIZE = 5, CSTR_BUFFER_SIZE = 32};
     static const char * LOG_LEVEL_ARRAY[LEVEL_ARRAY_SIZE]= {"DEBUG","INFO","WARN","ERROR","FATAL"};
     static const char * LOG_FORMAT = "%s %s:%d %s %s\n";
     static const char * LOG_TIME_FORMAT = "%Y-%m-%d %H:%M:%S";
@@ -36,24 +34,19 @@ namespace Limonp
     class Logger
     {
         public:
-            static bool Logging(uint level, const string& msg, const char* fileName, int lineNo)
+            static void Logging(size_t level, const string& msg, const char* fileName, int lineno)
             {
                 assert(level <= LL_FATAL);
                 char buf[CSTR_BUFFER_SIZE];
                 time_t timeNow;
                 time(&timeNow);
-                if(!strftime(buf, sizeof(buf), LOG_TIME_FORMAT, localtime(&timeNow)))
-                {
-                    fprintf(stderr, "stftime failed.\n");
-                    return false;
-                }
-                fprintf(stderr, LOG_FORMAT, buf, fileName, lineNo,LOG_LEVEL_ARRAY[level], msg.c_str());
-                return true;
+                strftime(buf, sizeof(buf), LOG_TIME_FORMAT, localtime(&timeNow));
+                fprintf(stderr, LOG_FORMAT, buf, fileName, lineno,LOG_LEVEL_ARRAY[level], msg.c_str());
             }
-            static bool LoggingF(uint level, const char* fileName, int lineNo, const string& fmt, ...)
+            static void LoggingF(size_t level, const char* fileName, int lineno, const string& fmt, ...)
             {
 #ifdef LOGGER_LEVEL
-                if(level < LOGGER_LEVEL) return true;
+                if(level < LOGGER_LEVEL) return;
 #endif
                 int size = 256;
                 string msg;
@@ -72,7 +65,7 @@ namespace Limonp
                     else
                       size *= 2;
                 }
-                return Logging(level, msg, fileName, lineNo);
+                Logging(level, msg, fileName, lineno);
             }
     };
 }

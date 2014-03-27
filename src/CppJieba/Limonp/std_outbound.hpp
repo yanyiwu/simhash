@@ -1,9 +1,26 @@
 #ifndef LIMONP_STD_OUTBOUND_H
 #define LIMONP_STD_OUTBOUND_H
 
-#include "map_functs.hpp"
 #include <map>
+
+#if(__cplusplus == 201103L)
+#include <unordered_map>
+#include <unordered_set>
+#else
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
+namespace std
+{
+    using std::tr1::unordered_map;
+    using std::tr1::unordered_set;
+}
+
+#endif
+
 #include <set>
+#include <vector>
+#include <fstream>
+#include <sstream>
 
 namespace std
 {
@@ -15,7 +32,7 @@ namespace std
                 return os << "[]";
             }
             os<<"[\""<<vec[0];
-            for(uint i = 1; i < vec.size(); i++)
+            for(size_t i = 1; i < vec.size(); i++)
             {
                 os<<"\", \""<<vec[i];
             }
@@ -59,14 +76,14 @@ namespace std
             return os;
         }
     template<class T1, class T2>
-        ostream& operator << (ostream& os, const HashMap<T1, T2>& mp)
+        ostream& operator << (ostream& os, const std::unordered_map<T1, T2>& mp)
         {
             if(mp.empty())
             {
                 return os << "{}";
             }
             os<<'{';
-            typename HashMap<T1, T2>::const_iterator it = mp.begin();
+            typename std::unordered_map<T1, T2>::const_iterator it = mp.begin();
             os<<*it;
             it++;
             while(it != mp.end())
@@ -95,6 +112,18 @@ namespace std
             }
             os<<'}';
             return os;
+        }
+
+    template<class KeyType, class ContainType>
+        bool isIn(const ContainType& contain, const KeyType& key)
+        {
+            return contain.end() != contain.find(key);
+        }
+
+    template<class T>
+        basic_string<T> & operator << (basic_string<T> & s, ifstream & ifs)
+        {
+            return s.assign((istreambuf_iterator<T>(ifs)), istreambuf_iterator<T>());
         }
 }
 

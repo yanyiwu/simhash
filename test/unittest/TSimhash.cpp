@@ -1,11 +1,12 @@
 #include "src/Simhasher.hpp"
+#include "src/CppJieba/Limonp/io_functs.hpp"
 #include "gtest/gtest.h"
 
 using namespace Simhash;
 
 TEST(SimhasherTest, Test1)
 {
-    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     ASSERT_TRUE(shash);
     string s;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
@@ -18,7 +19,7 @@ TEST(SimhasherTest, Test1)
 
 TEST(SimhasherTest, Test2)
 {
-    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     uint64_t u64;
     string s;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
@@ -30,7 +31,7 @@ TEST(SimhasherTest, Test2)
 
 TEST(SimhasherTest, Test3)
 {
-    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     uint64_t u1, u2;
     string s1, s2;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s1));
@@ -43,7 +44,7 @@ TEST(SimhasherTest, Test3)
 
 TEST(SimhasherTest, Test4)
 {
-    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     uint64_t u1, u2;
     string s1, s2;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.3", s1));
@@ -60,7 +61,7 @@ TEST(SimhasherTest, Test4)
 
 TEST(SimhasherTest, Test5)
 {
-    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
+    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     uint64_t u1, u2;
     string s1, s2;
     ASSERT_TRUE(loadFile2Str("../test/testdata/news_content.2", s1));
@@ -76,7 +77,7 @@ TEST(SimhasherTest, Test5)
 
 TEST(SimhasherTest, Test6)
 {
-    Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8");
+    Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     string s("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰。");
     string s2("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，迎娶白富美，走上人生巅峰，加薪。");
     //string res;

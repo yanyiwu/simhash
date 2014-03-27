@@ -13,8 +13,7 @@ simhash是谷歌用来进行文本去重的算法，现在广泛应用在文本�
 
 ## 你可能需要安装的
 
-* cmake(version >= 2.8  recommended)
-* g++ (version >= 4.7 recommended)
+* g++ (version >= 4.1 recommended)
 
 
 ## 运行和使用
