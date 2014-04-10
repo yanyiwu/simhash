@@ -1,4 +1,4 @@
-# simhash  专门针对中文文档的simhash算法
+# 专门针对中文文档的simhash算法库
 
 ## 概述
 
