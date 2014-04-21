@@ -5,7 +5,7 @@
 #include <set>
 #include <cassert>
 #include "Limonp/logger.hpp"
-#include "Trie.hpp"
+#include "DictTrie.hpp"
 #include "ISegment.hpp"
 #include "SegmentBase.hpp"
 #include "TransCode.hpp"
@@ -15,7 +15,7 @@ namespace CppJieba
     class FullSegment: public SegmentBase
     {
         private:
-            Trie _trie;
+            DictTrie _dictTrie;
 
         public:
             FullSegment(){_setInitFlag(false);};
@@ -29,8 +29,8 @@ namespace CppJieba
                     LogError("already inited before now.");
                     return false;
                 }
-                _trie.init(dictPath.c_str());
-                assert(_trie);
+                _dictTrie.init(dictPath.c_str());
+                assert(_dictTrie);
                 return _setInitFlag(true);
             }
 
@@ -48,7 +48,7 @@ namespace CppJieba
                 }
 
                 //resut of searching in trie tree
-                vector<pair<size_t, const TrieNodeInfo*> > tRes;
+                DagType tRes;
 
                 //max index of res's words
                 int maxIdx = 0;
@@ -61,9 +61,10 @@ namespace CppJieba
                 for (Unicode::const_iterator uItr = begin; uItr != end; uItr++)
                 {
                     //find word start from uItr
-                    if (_trie.find(uItr, end, tRes))
+                    if (_dictTrie.find(uItr, end, tRes, 0))
                     {
-                        for (vector<pair<size_t, const TrieNodeInfo*> >::const_iterator itr = tRes.begin(); itr != tRes.end(); itr++)
+                        for(DagType::const_iterator itr = tRes.begin(); itr != tRes.end(); itr++)
+                        //for (vector<pair<size_t, const DictUnit*> >::const_iterator itr = tRes.begin(); itr != tRes.end(); itr++)
                         {
                             wordLen = itr->second->word.size();
                             if (wordLen >= 2 || (tRes.size() == 1 && maxIdx <= uIdx))

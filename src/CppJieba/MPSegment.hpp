@@ -9,8 +9,8 @@
 #include <set>
 #include <cassert>
 #include "Limonp/logger.hpp"
-#include "Trie.hpp"
-#include "Trie.hpp"
+#include "DictTrie.hpp"
+#include "DictTrie.hpp"
 #include "ISegment.hpp"
 #include "SegmentBase.hpp"
 
@@ -21,18 +21,17 @@ namespace CppJieba
     {
         uint16_t uniCh;
         DagType dag;
-        const TrieNodeInfo * pInfo;
+        const DictUnit * pInfo;
         double weight;
-
-        SegmentChar(uint16_t uni):uniCh(uni), pInfo(NULL), weight(0.0)
+        size_t nextPos;
+        SegmentChar():uniCh(0), pInfo(NULL), weight(0.0), nextPos(0)
         {}
     };
-    typedef vector<SegmentChar> SegmentContext;
 
     class MPSegment: public SegmentBase
     {
         protected:
-            Trie _trie;
+            DictTrie _dictTrie;
 
         public:
             MPSegment(){_setInitFlag(false);};
@@ -49,8 +48,8 @@ namespace CppJieba
                     LogError("already inited before now.");
                     return false;
                 }
-                _trie.init(dictPath);
-                assert(_trie);
+                _dictTrie.init(dictPath);
+                assert(_dictTrie);
                 LogInfo("MPSegment init(%s) ok", dictPath.c_str());
                 return _setInitFlag(true);
             }
@@ -59,18 +58,22 @@ namespace CppJieba
             virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
             {
                 assert(_getInitFlag());
-
-                vector<TrieNodeInfo> segWordInfos;
-                if(!cut(begin, end, segWordInfos))
+                if(begin == end)
                 {
                     return false;
                 }
-                string tmp;
-                for(size_t i = 0; i < segWordInfos.size(); i++)
+
+                vector<Unicode> words;
+                if(!cut(begin, end, words))
                 {
-                    if(TransCode::encode(segWordInfos[i].word, tmp))
+                    return false;
+                }
+                string word;
+                for(size_t i = 0; i < words.size(); i++)
+                {
+                    if(TransCode::encode(words[i], word))
                     {
-                        res.push_back(tmp);
+                        res.push_back(word);
                     }
                     else
                     {
@@ -80,29 +83,28 @@ namespace CppJieba
                 return true;
             }
 
-            bool cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<TrieNodeInfo>& segWordInfos)const
+            bool cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<Unicode>& res) const
             {
                 if(!_getInitFlag())
                 {
                     LogError("not inited.");
                     return false;
                 }
-                SegmentContext segContext;
-
+                vector<SegmentChar> SegmentChars;
                 //calc DAG
-                if(!_calcDAG(begin, end, segContext))
+                if(!_calcDAG(begin, end, SegmentChars))
                 {
                     LogError("_calcDAG failed.");
                     return false;
                 }
 
-                if(!_calcDP(segContext))
+                if(!_calcDP(SegmentChars))
                 {
                     LogError("_calcDP failed.");
                     return false;
                 }
 
-                if(!_cut(segContext, segWordInfos))
+                if(!_cut(SegmentChars, res))
                 {
                     LogError("_cut failed.");
                     return false;
@@ -112,48 +114,48 @@ namespace CppJieba
             }
 
         private:
-            bool _calcDAG(Unicode::const_iterator begin, Unicode::const_iterator end, SegmentContext& segContext) const
+            bool _calcDAG(Unicode::const_iterator begin, Unicode::const_iterator end, vector<SegmentChar>& SegmentChars) const
             {
-                if(begin >= end)
-                {
-                    LogError("begin >= end.");
-                    return false;
-                }
-
+                SegmentChar schar;
+                size_t offset;
                 for(Unicode::const_iterator it = begin; it != end; it++)
                 {
-                    SegmentChar schar(*it);
-                    size_t i = it - begin;
-                    _trie.find(it, end, i, schar.dag);
-                    //DagType::iterator dagIter;
-                    if(schar.dag.end() ==  schar.dag.find(i))
+                    schar.uniCh = *it;
+                    offset = it - begin;
+                    schar.dag.clear();
+                    _dictTrie.find(it, end, schar.dag, offset);
+                    if(!isIn(schar.dag, offset))
                     {
-                        schar.dag[i] = NULL;
+                        schar.dag[offset] = NULL;
                     }
-                    segContext.push_back(schar);
+                    SegmentChars.push_back(schar);
                 }
                 return true;
             }
-            bool _calcDP(SegmentContext& segContext)const
+            bool _calcDP(vector<SegmentChar>& SegmentChars)const
             {
-                if(segContext.empty())
+                if(SegmentChars.empty())
                 {
-                    LogError("segContext empty");
+                    LogError("SegmentChars empty");
                     return false;
                 }
 
-                for(int i = segContext.size() - 1; i >= 0; i--)
+                size_t nextPos;
+                const DictUnit* p;
+                double val;
+
+                for(int i = SegmentChars.size() - 1; i >= 0; i--)
                 {
-                    segContext[i].pInfo = NULL;
-                    segContext[i].weight = MIN_DOUBLE;
-                    for(DagType::const_iterator it = segContext[i].dag.begin(); it != segContext[i].dag.end(); it++)
+                    SegmentChars[i].pInfo = NULL;
+                    SegmentChars[i].weight = MIN_DOUBLE;
+                    for(DagType::const_iterator it = SegmentChars[i].dag.begin(); it != SegmentChars[i].dag.end(); it++)
                     {
-                        size_t nextPos = it->first;
-                        const TrieNodeInfo* p = it->second;
-                        double val = 0.0;
-                        if(nextPos + 1 < segContext.size())
+                        nextPos = it->first;
+                        p = it->second;
+                        val = 0.0;
+                        if(nextPos + 1 < SegmentChars.size())
                         {
-                            val += segContext[nextPos + 1].weight;
+                            val += SegmentChars[nextPos + 1].weight;
                         }
 
                         if(p)
@@ -162,36 +164,32 @@ namespace CppJieba
                         }
                         else
                         {
-                            val += _trie.getMinLogFreq();
+                            val += _dictTrie.getMinLogFreq();
                         }
-                        if(val > segContext[i].weight)
+                        if(val > SegmentChars[i].weight)
                         {
-                            segContext[i].pInfo = p;
-                            segContext[i].weight = val;
+                            SegmentChars[i].pInfo = p;
+                            SegmentChars[i].weight = val;
                         }
                     }
                 }
                 return true;
 
             }
-            bool _cut(SegmentContext& segContext, vector<TrieNodeInfo>& res)const
+            bool _cut(vector<SegmentChar>& SegmentChars, vector<Unicode>& res)const
             {
                 size_t i = 0;
-                while(i < segContext.size())
+                while(i < SegmentChars.size())
                 {
-                    const TrieNodeInfo* p = segContext[i].pInfo;
+                    const DictUnit* p = SegmentChars[i].pInfo;
                     if(p)
                     {
-                        res.push_back(*p);
+                        res.push_back(p->word);
                         i += p->word.size();
                     }
                     else//single chinese word
                     {
-                        TrieNodeInfo nodeInfo;
-                        nodeInfo.word.push_back(segContext[i].uniCh);
-                        nodeInfo.freq = 0;
-                        nodeInfo.logFreq = _trie.getMinLogFreq();
-                        res.push_back(nodeInfo);
+                        res.push_back(Unicode(1, SegmentChars[i].uniCh));
                         i++;
                     }
                 }

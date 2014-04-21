@@ -10,7 +10,7 @@
 #include "TransCode.hpp"
 #include "ISegment.hpp"
 #include "SegmentBase.hpp"
-#include "Trie.hpp"
+#include "DictTrie.hpp"
 
 namespace CppJieba
 {
@@ -69,13 +69,42 @@ namespace CppJieba
             }
         public:
             using SegmentBase::cut;
+        public:
             bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<Unicode>& res)const 
             {
-                if(!_getInitFlag())
+                Unicode::const_iterator left = begin;
+                Unicode::const_iterator right = begin;
+                while(right != end)
                 {
-                    LogError("not inited.");
+                    if(*right < 0x80) 
+                    {
+                        if(left != right && !_cut(left, right, res))
+                        {
+                            return false;
+                        }
+                        left = right;
+                        while(*right < 0x80 && right != end)
+                        {
+                            right++;
+                        }
+                        res.push_back(Unicode(left, right));
+                        left = right;
+                    }
+                    else
+                    {
+                        right++;
+                    }
+                }
+                if(left != right && !_cut(left, right, res))
+                {
                     return false;
                 }
+                return true;
+            }
+        private:
+            bool _cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<Unicode>& res) const 
+            {
+                assert(_getInitFlag());
                 vector<size_t> status; 
                 if(!_viterbi(begin, end, status))
                 {
@@ -85,7 +114,7 @@ namespace CppJieba
 
                 Unicode::const_iterator left = begin;
                 Unicode::const_iterator right;
-                for(size_t i =0; i< status.size(); i++)
+                for(size_t i = 0; i < status.size(); i++)
                 {
                     if(status[i] % 2) //if(E == status[i] || S == status[i])
                     {
@@ -131,15 +160,11 @@ namespace CppJieba
                 size_t Y = STATUS_SUM;
                 size_t X = end - begin;
                 size_t XYSize = X * Y;
-                int * path;
-                double * weight;
                 size_t now, old, stat;
                 double tmp, endE, endS;
 
-                path = new int [XYSize];
-                assert(path);
-                weight = new double [XYSize];
-                assert(weight);
+                vector<int> path(XYSize);
+                vector<double> weight(XYSize);
 
                 //start
                 for(size_t y = 0; y < Y; y++)
@@ -147,8 +172,10 @@ namespace CppJieba
                     weight[0 + y * X] = _startProb[y] + _getEmitProb(_emitProbVec[y], *begin, MIN_DOUBLE);
                     path[0 + y * X] = -1;
                 }
-                //process
-                //for(; begin != end; begin++)
+
+
+                double emitProb;
+
                 for(size_t x = 1; x < X; x++)
                 {
                     for(size_t y = 0; y < Y; y++)
@@ -156,10 +183,11 @@ namespace CppJieba
                         now = x + y*X;
                         weight[now] = MIN_DOUBLE;
                         path[now] = E; // warning
+                        emitProb = _getEmitProb(_emitProbVec[y], *(begin+x), MIN_DOUBLE);
                         for(size_t preY = 0; preY < Y; preY++)
                         {
                             old = x - 1 + preY * X;
-                            tmp = weight[old] + _transProb[preY][y] + _getEmitProb(_emitProbVec[y], *(begin+x), MIN_DOUBLE);
+                            tmp = weight[old] + _transProb[preY][y] + emitProb;
                             if(tmp > weight[now])
                             {
                                 weight[now] = tmp;
@@ -172,7 +200,7 @@ namespace CppJieba
                 endE = weight[X-1+E*X];
                 endS = weight[X-1+S*X];
                 stat = 0;
-                if(endE > endS)
+                if(endE >= endS)
                 {
                     stat = E;
                 }
@@ -188,8 +216,6 @@ namespace CppJieba
                     stat = path[x + stat*X];
                 }
 
-                delete [] path;
-                delete [] weight;
                 return true;
             }
             bool _loadModel(const char* const filePath)
