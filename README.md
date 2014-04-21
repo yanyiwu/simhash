@@ -1,6 +1,6 @@
 # 专门针对中文文档的simhash算法库
 
-## 概述
+## Introduction
 
 此项目用来对中文文档计算出对于的simhash值
 
@@ -11,12 +11,11 @@ simhash是谷歌用来进行文本去重的算法，现在广泛应用在文本�
 对于hash算法直接采用[jenkins]，少量修改。
 
 
-## 你可能需要安装的
+## Dependency
 
-* g++ (version >= 4.1 recommended)
+* g++ (version >= 4.1 recommended). If using clang++, maybe you need compiler option `-std=c++0x`.
 
-
-## 运行和使用
+## Usage
 
 ```sh
 mkdir build
@@ -25,7 +24,7 @@ cmake ..
 make
 ```
 
-### demo 
+### Demo
 
 ```sh
 ./bin/simhash.demo
@@ -42,17 +41,15 @@ simhash值是: 17831459094038722629
 海明距离阈值默认设置为5，则isEqual结果为：1
 ```
 
-### 用法
-
 功能代码都写成hpp文件，直接include即可使用。
 
 上面的 `simhash.demo` 是由 `src/main.cpp` 生成。
 
 所以关于simhash的用法请看`src/main.cpp`，很简单，就几行代码。
 
-## 客服
+## Contact
 
-wuyanyi09@gmail.com
+wuyanyi09@foxmail.com
 
 [SimhashBlog]:http://aszxqw.github.io/jekyll/update/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/aszxqw/cppjieba
