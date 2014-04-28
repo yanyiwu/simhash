@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/aszxqw/simhash.png?branch=master)](https://travis-ci.org/aszxqw/simhash)
+- - -
+
 # 专门针对中文文档的simhash算法库
 
 ## Introduction
