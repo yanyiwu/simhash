@@ -51,6 +51,6 @@ See **details** in `src/main.cpp`.
 
 wuyanyi09@foxmail.com
 
-[SimhashBlog]:http://aszxqw.github.io/jekyll/update/2014/01/30/simhash-shi-xian-xiang-jie.html
+[SimhashBlog]:http://aszxqw.com/jekyll/update/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/aszxqw/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h
