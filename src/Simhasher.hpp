@@ -102,13 +102,6 @@ namespace Simhash
                 }
             }
 
-            static string toBinaryString(uint64_t req)
-            {
-                string res;
-                toBinaryString(req, res);
-                return res;
-            }
-
             static uint64_t binaryStringToUint64(const string& bin)
             {
                 uint64_t res = 0;
