@@ -134,16 +134,18 @@ namespace CppJieba
                     return false;
                 }
                 vector<Unicode> words;
+                words.reserve(end - begin);
                 if(!cut(begin, end, words))
                 {
                     return false;
                 }
-                string tmp;
+                size_t offset = res.size();
+                res.resize(res.size() + words.size());
                 for(size_t i = 0; i < words.size(); i++)
                 {
-                    if(TransCode::encode(words[i], tmp))
+                    if(!TransCode::encode(words[i], res[offset + i]))
                     {
-                        res.push_back(tmp);
+                        LogError("encode failed.");
                     }
                 }
                 return true;
@@ -159,6 +161,7 @@ namespace CppJieba
 
                 size_t Y = STATUS_SUM;
                 size_t X = end - begin;
+
                 size_t XYSize = X * Y;
                 size_t now, old, stat;
                 double tmp, endE, endS;
@@ -209,7 +212,7 @@ namespace CppJieba
                     stat = S;
                 }
 
-                status.assign(X, 0);
+                status.resize(X);
                 for(int x = X -1 ; x >= 0; x--)
                 {
                     status[x] = stat;
@@ -314,7 +317,7 @@ namespace CppJieba
                     return false;
                 }
                 vector<string> tmp, tmp2;
-                uint16_t unico = 0;
+                Unicode unicode;
                 split(line, tmp, ",");
                 for(size_t i = 0; i < tmp.size(); i++)
                 {
@@ -324,23 +327,13 @@ namespace CppJieba
                         LogError("_emitProb illegal.");
                         return false;
                     }
-                    if(!_decodeOne(tmp2[0], unico))
+                    if(!TransCode::decode(tmp2[0], unicode) || unicode.size() != 1)
                     {
                         LogError("TransCode failed.");
                         return false;
                     }
-                    mp[unico] = atof(tmp2[1].c_str());
+                    mp[unicode[0]] = atof(tmp2[1].c_str());
                 }
-                return true;
-            }
-            bool _decodeOne(const string& str, uint16_t& res)
-            {
-                Unicode ui16;
-                if(!TransCode::decode(str, ui16) || ui16.size() != 1)
-                {
-                    return false;
-                }
-                res = ui16[0];
                 return true;
             }
             double _getEmitProb(const EmitProbMap* ptMp, uint16_t key, double defVal)const 

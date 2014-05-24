@@ -39,19 +39,21 @@ namespace CppJieba
 
         public:
             virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res) const = 0;
-            virtual bool cut(const string& str, vector<string>& res)const
+            virtual bool cut(const string& str, vector<string>& res) const
             {
                 assert(_getInitFlag());
+                res.clear();
+                res.reserve(str.size());
 
                 Unicode unicode;
+                unicode.reserve(str.size());
+
                 TransCode::decode(str, unicode);
-                res.clear();
                 
                 Unicode::const_iterator left = unicode.begin();
-                Unicode::const_iterator right = unicode.begin();
+                Unicode::const_iterator right;
                 
-                string oneword;
-                while(right != unicode.end())
+                for(right = unicode.begin(); right != unicode.end(); right++)
                 {
                     if(isIn(_specialSymbols, *right))
                     {
@@ -59,14 +61,9 @@ namespace CppJieba
                         {
                             cut(left, right, res);
                         }
-                        TransCode::encode(right, right + 1, oneword);
-                        res.push_back(oneword);
-                        right ++;
-                        left = right;
-                    }
-                    else
-                    {
-                        right ++;
+                        res.resize(res.size() + 1);
+                        TransCode::encode(right, right + 1, res.back());
+                        left = right + 1;
                     }
                 }
                 if(left != right)

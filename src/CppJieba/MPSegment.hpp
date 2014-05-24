@@ -35,23 +35,27 @@ namespace CppJieba
 
         public:
             MPSegment(){_setInitFlag(false);};
-            explicit MPSegment(const string& dictPath)
+            explicit MPSegment(const string& dictPath, const string& userDictPath = "")
             {
-                _setInitFlag(init(dictPath));
+                _setInitFlag(init(dictPath, userDictPath));
             };
             virtual ~MPSegment(){};
         public:
-            bool init(const string& dictPath)
+            bool init(const string& dictPath, const string& userDictPath = "")
             {
                 if(_getInitFlag())
                 {
                     LogError("already inited before now.");
                     return false;
                 }
-                _dictTrie.init(dictPath);
+                _dictTrie.init(dictPath, userDictPath);
                 assert(_dictTrie);
                 LogInfo("MPSegment init(%s) ok", dictPath.c_str());
                 return _setInitFlag(true);
+            }
+            bool isUserDictSingleChineseWord(const Unicode::value_type & value) const
+            {
+                return _dictTrie.isUserDictSingleChineseWord(value);
             }
         public:
             using SegmentBase::cut;
@@ -64,20 +68,18 @@ namespace CppJieba
                 }
 
                 vector<Unicode> words;
+                words.reserve(end - begin);
                 if(!cut(begin, end, words))
                 {
                     return false;
                 }
-                string word;
+                res.resize(words.size());
                 for(size_t i = 0; i < words.size(); i++)
                 {
-                    if(TransCode::encode(words[i], word))
-                    {
-                        res.push_back(word);
-                    }
-                    else
+                    if(!TransCode::encode(words[i], res[i]))
                     {
                         LogError("encode failed.");
+                        res[i].clear();
                     }
                 }
                 return true;
@@ -85,26 +87,25 @@ namespace CppJieba
 
             bool cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<Unicode>& res) const
             {
-                if(!_getInitFlag())
+                if(end == begin)
                 {
-                    LogError("not inited.");
                     return false;
                 }
-                vector<SegmentChar> SegmentChars;
+                assert(_getInitFlag());
+                vector<SegmentChar> segmentChars(end - begin);
+
                 //calc DAG
-                if(!_calcDAG(begin, end, SegmentChars))
+                for(size_t i = 0; i < segmentChars.size(); i ++)
                 {
-                    LogError("_calcDAG failed.");
-                    return false;
+                    segmentChars[i].uniCh = *(begin + i);
+                    segmentChars[i].dag.clear();
+                    _dictTrie.find(begin + i, end, segmentChars[i].dag, i);
+                    segmentChars[i].dag.insert(make_pair<DagType::key_type, DagType::mapped_type>(i, NULL));
                 }
 
-                if(!_calcDP(SegmentChars))
-                {
-                    LogError("_calcDP failed.");
-                    return false;
-                }
+                _calcDP(segmentChars);
 
-                if(!_cut(SegmentChars, res))
+                if(!_cut(segmentChars, res))
                 {
                     LogError("_cut failed.");
                     return false;
@@ -114,32 +115,8 @@ namespace CppJieba
             }
 
         private:
-            bool _calcDAG(Unicode::const_iterator begin, Unicode::const_iterator end, vector<SegmentChar>& SegmentChars) const
+            void _calcDP(vector<SegmentChar>& SegmentChars) const
             {
-                SegmentChar schar;
-                size_t offset;
-                for(Unicode::const_iterator it = begin; it != end; it++)
-                {
-                    schar.uniCh = *it;
-                    offset = it - begin;
-                    schar.dag.clear();
-                    _dictTrie.find(it, end, schar.dag, offset);
-                    if(!isIn(schar.dag, offset))
-                    {
-                        schar.dag[offset] = NULL;
-                    }
-                    SegmentChars.push_back(schar);
-                }
-                return true;
-            }
-            bool _calcDP(vector<SegmentChar>& SegmentChars)const
-            {
-                if(SegmentChars.empty())
-                {
-                    LogError("SegmentChars empty");
-                    return false;
-                }
-
                 size_t nextPos;
                 const DictUnit* p;
                 double val;
@@ -160,11 +137,11 @@ namespace CppJieba
 
                         if(p)
                         {
-                            val += p->logFreq; 
+                            val += p->weight; 
                         }
                         else
                         {
-                            val += _dictTrie.getMinLogFreq();
+                            val += _dictTrie.getMinWeight();
                         }
                         if(val > SegmentChars[i].weight)
                         {
@@ -173,15 +150,13 @@ namespace CppJieba
                         }
                     }
                 }
-                return true;
-
             }
-            bool _cut(vector<SegmentChar>& SegmentChars, vector<Unicode>& res)const
+            bool _cut(const vector<SegmentChar>& segmentChars, vector<Unicode>& res)const
             {
                 size_t i = 0;
-                while(i < SegmentChars.size())
+                while(i < segmentChars.size())
                 {
-                    const DictUnit* p = SegmentChars[i].pInfo;
+                    const DictUnit* p = segmentChars[i].pInfo;
                     if(p)
                     {
                         res.push_back(p->word);
@@ -189,7 +164,7 @@ namespace CppJieba
                     }
                     else//single chinese word
                     {
-                        res.push_back(Unicode(1, SegmentChars[i].uniCh));
+                        res.push_back(Unicode(1, segmentChars[i].uniCh));
                         i++;
                     }
                 }
