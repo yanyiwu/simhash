@@ -6,7 +6,8 @@ script:
   - cd build
   - cmake ..
   - make
-  - make test
+  - ./test/test.run
+  - ./test/load_test
 compiler:
   - clang
   - gcc
