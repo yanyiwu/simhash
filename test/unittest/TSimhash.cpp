@@ -1,8 +1,18 @@
 #include "src/Simhasher.hpp"
-#include "src/CppJieba/Limonp/io_functs.hpp"
 #include "gtest/gtest.h"
 
 using namespace Simhash;
+
+static bool loadFile2Str(const string& filePath, string& s)
+{
+    ifstream ifs(filePath.c_str());
+    if(!ifs)
+    {
+        return false;
+    }
+    s << ifs;
+    return true;
+}
 
 TEST(SimhasherTest, Test1)
 {
