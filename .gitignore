@@ -1,4 +1,3 @@
-*tmp*
 tags
 *swp
 *.out
@@ -10,3 +9,4 @@ log
 *.pyc
 *.pyo
 *.a
+t.cpp
