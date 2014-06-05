@@ -5,7 +5,7 @@
 
 using namespace Simhash;
 
-void simhash(size_t times = 400)
+void simhash(size_t times = 2000)
 {
     Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     assert(simhasher);
