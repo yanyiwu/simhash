@@ -1,6 +1,6 @@
 ## v0.9.5 (is comming)
 
-1. 更新[CppJieba]，性能提高`30%`。
+1. 更新[CppJieba]，提高性能。
 
 ## v0.9.4
 
