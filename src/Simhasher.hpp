@@ -1,5 +1,5 @@
-#ifndef SIMHASH_SIMHASH_H
-#define SIMHASH_SIMHASH_H
+#ifndef SIMHASH_SIMHASHER_HPP
+#define SIMHASH_SIMHASHER_HPP
 
 #include "CppJieba/KeywordExtractor.hpp"
 #include "hashes/jenkins.h"
@@ -7,20 +7,20 @@
 namespace Simhash
 {
     using namespace CppJieba;
-    class Simhasher: public InitOnOff
+    class Simhasher: public NonCopyable
     {
         private:
             enum{BITS_LENGTH = 64};
             jenkins _hasher;
-            KeywordExtractor _keywordExtor;
+            KeywordExtractor _extractor;
         public:
-            Simhasher(const string& dictPath, const string& modelPath, const string& idfPath, const string& stopWords): _keywordExtor(dictPath, modelPath, idfPath, stopWords)
-            {_setInitFlag(_keywordExtor);}
+            Simhasher(const string& dictPath, const string& modelPath, const string& idfPath, const string& stopWords): _extractor(dictPath, modelPath, idfPath, stopWords)
+            {assert(_extractor);}
             ~Simhasher(){};
         public:
             bool extract(const string& text, vector<pair<string,double> > & res, size_t topN) const
             {
-                return _keywordExtor.extract(text, res, topN);
+                return _extractor.extract(text, res, topN);
             }
             bool make(const string& text, size_t topN, vector<pair<uint64_t, double> >& res) const
             {
@@ -30,11 +30,12 @@ namespace Simhash
                     LogError("extract failed.");
                     return false;
                 }
-                res.clear();
-                for(size_t i = 0; i < wordweights.size(); i++)
+                assert(topN == wordweights.size());
+                res.resize(topN);
+                for(size_t i = 0; i < topN; i++)
                 {
-                    const string& word = wordweights[i].first;
-                    res.push_back(make_pair(_hasher(word.c_str(), word.size(), 0), wordweights[i].second));
+                    res[i].first = _hasher(wordweights[i].first.c_str(), wordweights[i].first.size(), 0);
+                    res[i].second = wordweights[i].second;
                 }
 
                 return true;
@@ -53,14 +54,7 @@ namespace Simhash
                 {
                     for(size_t j = 0; j < BITS_LENGTH; j++)
                     {
-                        if(((u64_1 << j) & hashvalues[i].first))
-                        {
-                            weights[j] += hashvalues[i].second;
-                        }
-                        else
-                        {
-                            weights[j] -= hashvalues[i].second;
-                        }
+                        weights [j] += (((u64_1 << j) & hashvalues[i].first) ? 1: -1) * hashvalues[i].second;
                     }
                 }
 

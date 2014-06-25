@@ -18,7 +18,6 @@ TEST(SimhasherTest, Test1)
 {
     Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     {
-        ASSERT_TRUE(shash);
         string s;
         ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
         vector<pair<uint64_t, double> > v64s;
