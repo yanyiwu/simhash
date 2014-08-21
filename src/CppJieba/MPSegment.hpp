@@ -34,24 +34,18 @@ namespace CppJieba
             DictTrie _dictTrie;
 
         public:
-            MPSegment(){_setInitFlag(false);};
-            explicit MPSegment(const string& dictPath, const string& userDictPath = "")
+            MPSegment(){};
+            MPSegment(const string& dictPath, const string& userDictPath = "")
             {
-                _setInitFlag(init(dictPath, userDictPath));
+                LIMONP_CHECK(init(dictPath, userDictPath));
             };
             virtual ~MPSegment(){};
         public:
             bool init(const string& dictPath, const string& userDictPath = "")
             {
-                if(_getInitFlag())
-                {
-                    LogError("already inited before now.");
-                    return false;
-                }
-                _dictTrie.init(dictPath, userDictPath);
-                assert(_dictTrie);
+                LIMONP_CHECK(_dictTrie.init(dictPath, userDictPath));
                 LogInfo("MPSegment init(%s) ok", dictPath.c_str());
-                return _setInitFlag(true);
+                return true;
             }
             bool isUserDictSingleChineseWord(const Unicode::value_type & value) const
             {
@@ -61,7 +55,6 @@ namespace CppJieba
             using SegmentBase::cut;
             virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
             {
-                assert(_getInitFlag());
                 if(begin == end)
                 {
                     return false;
@@ -73,13 +66,14 @@ namespace CppJieba
                 {
                     return false;
                 }
-                res.resize(words.size());
+                size_t offset = res.size();
+                res.resize(res.size() + words.size());
                 for(size_t i = 0; i < words.size(); i++)
                 {
-                    if(!TransCode::encode(words[i], res[i]))
+                    if(!TransCode::encode(words[i], res[i + offset]))
                     {
                         LogError("encode failed.");
-                        res[i].clear();
+                        res[i + offset].clear();
                     }
                 }
                 return true;
@@ -91,7 +85,6 @@ namespace CppJieba
                 {
                     return false;
                 }
-                assert(_getInitFlag());
                 vector<SegmentChar> segmentChars(end - begin);
 
                 //calc DAG
@@ -100,7 +93,7 @@ namespace CppJieba
                     segmentChars[i].uniCh = *(begin + i);
                     segmentChars[i].dag.clear();
                     _dictTrie.find(begin + i, end, segmentChars[i].dag, i);
-                    segmentChars[i].dag.insert(make_pair<DagType::key_type, DagType::mapped_type>(i, NULL));
+                    segmentChars[i].dag.insert(pair<DagType::key_type, DagType::mapped_type>(i, NULL));
                 }
 
                 _calcDP(segmentChars);
@@ -112,6 +105,10 @@ namespace CppJieba
                 }
 
                 return true;
+            }
+            const DictTrie* getDictTrie() const 
+            {
+                return &_dictTrie;
             }
 
         private:

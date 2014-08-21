@@ -15,7 +15,7 @@ namespace Simhash
             KeywordExtractor _extractor;
         public:
             Simhasher(const string& dictPath, const string& modelPath, const string& idfPath, const string& stopWords): _extractor(dictPath, modelPath, idfPath, stopWords)
-            {assert(_extractor);}
+            {}
             ~Simhasher(){};
         public:
             bool extract(const string& text, vector<pair<string,double> > & res, size_t topN) const
