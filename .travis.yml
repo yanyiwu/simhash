@@ -8,6 +8,7 @@ script:
   - make
   - ./test/test.run
   - ./test/load_test
+  - ./bin/simhash.demo
 compiler:
   - clang
   - gcc
