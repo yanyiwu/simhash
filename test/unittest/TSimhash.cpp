@@ -62,9 +62,18 @@ TEST(SimhasherTest, Test1)
         ASSERT_TRUE(shash.make(s2, 50, u2));
         ASSERT_NE(u1, u2);
     }
+    {
+        uint64_t u1;
+        const char * const sentence = "你好世界";
+        //vector<pair<string, double> > res;
+        shash.make(sentence, 3, u1);
+        string s;
+        s << u1;
+        ASSERT_EQ(s, "17676873585679812141");
+    }
 }
 
-TEST(SimhasherTest, Test7)
+TEST(SimhasherTest, Test2)
 {
     uint64_t u1, u2;
     u1 = Simhasher::binaryStringToUint64("100010110110"); 

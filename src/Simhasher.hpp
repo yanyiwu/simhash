@@ -30,9 +30,8 @@ namespace Simhash
                     LogError("extract failed.");
                     return false;
                 }
-                assert(topN == wordweights.size());
-                res.resize(topN);
-                for(size_t i = 0; i < topN; i++)
+                res.resize(wordweights.size());
+                for(size_t i = 0; i < res.size(); i++)
                 {
                     res[i].first = _hasher(wordweights[i].first.c_str(), wordweights[i].first.size(), 0);
                     res[i].second = wordweights[i].second;
