@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/aszxqw/simhash.png?branch=master)](https://travis-ci.org/aszxqw/simhash)
+[![Build Status](https://travis-ci.org/yanyiwu/simhash.png?branch=master)](https://travis-ci.org/yanyiwu/simhash)
 - - -
 
 # 专门针对中文文档的simhash算法库
@@ -52,5 +52,5 @@ simhash值是: 17831459094038722629
 `i@yanyiwu.com`
 
 [SimhashBlog]:http://yanyiwu.com/work/2014/01/30/simhash-shi-xian-xiang-jie.html
-[CppJieba]:https://github.com/aszxqw/cppjieba
+[CppJieba]:https://github.com/yanyiwu/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h

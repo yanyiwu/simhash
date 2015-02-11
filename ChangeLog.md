@@ -23,4 +23,4 @@
 
 1. 完成分词，关键词抽取，simhash值计算的基本功能
 
-[CppJieba]:https://github.com/aszxqw/cppjieba.git
+[CppJieba]:https://github.com/yanyiwu/cppjieba.git
