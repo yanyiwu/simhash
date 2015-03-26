@@ -10,3 +10,4 @@ log
 *.pyo
 *.a
 t.cpp
+build

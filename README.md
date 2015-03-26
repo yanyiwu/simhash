@@ -7,7 +7,7 @@
 
 此项目用来对中文文档计算出对应的 simhash 值。 simhash 是谷歌用来进行文本去重的算法，现在广泛应用在文本处理中。
 
-详见[SimhashBlog]
+详见[simhash算法原理及实现]
 
 ## 特性
 
@@ -51,6 +51,6 @@ simhash值是: 17831459094038722629
 
 `i@yanyiwu.com`
 
-[SimhashBlog]:http://yanyiwu.com/work/2014/01/30/simhash-shi-xian-xiang-jie.html
+[simhash算法原理及实现]:http://yanyiwu.com/work/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/yanyiwu/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h
