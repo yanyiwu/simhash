@@ -14,6 +14,7 @@
 + 使用 [CppJieba] 作为分词器和关键词抽取器
 + 使用 [jenkins] 作为 hash 函数
 + `hpp` 风格，所有源码都是 `.hpp` 文件里面，方便使用。 `没有链接，就没有伤害。`
++ 本项目的副产品项目：[simhash\_server] 提供了简单的 simhash HTTP 服务。
 
 ## 依赖
 
@@ -54,3 +55,4 @@ simhash值是: 17831459094038722629
 [simhash算法原理及实现]:http://yanyiwu.com/work/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/yanyiwu/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h
+[simhash\_server]:https://github.com/yanyiwu/simhash_server
