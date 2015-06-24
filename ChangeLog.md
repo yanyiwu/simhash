@@ -1,6 +1,8 @@
-## v0.9.5 (is comming)
+# Simhash ChangeLog
 
-1. 更新[CppJieba]，提高性能。
+## v0.9.5
+
+1. 使用[CppJieba] v3.0.1 ，修复一些兼容性问题。
 
 ## v0.9.4
 
