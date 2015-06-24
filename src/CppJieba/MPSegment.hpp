@@ -1,7 +1,3 @@
-/************************************
- * file enc : ASCII
- * author   : wuyanyi09@gmail.com
- ************************************/
 #ifndef CPPJIEBA_MPSEGMENT_H
 #define CPPJIEBA_MPSEGMENT_H
 
@@ -10,166 +6,112 @@
 #include <cassert>
 #include "Limonp/Logger.hpp"
 #include "DictTrie.hpp"
-#include "DictTrie.hpp"
 #include "ISegment.hpp"
 #include "SegmentBase.hpp"
 
-namespace CppJieba
-{
+namespace CppJieba {
 
-    struct SegmentChar 
-    {
-        uint16_t uniCh;
-        DagType dag;
-        const DictUnit * pInfo;
-        double weight;
-        size_t nextPos;
-        SegmentChar():uniCh(0), pInfo(NULL), weight(0.0), nextPos(0)
-        {}
-    };
+class MPSegment: public SegmentBase {
+ public:
+  MPSegment(const string& dictPath, const string& userDictPath = "") {
+    dictTrie_ = new DictTrie(dictPath, userDictPath);
+    isNeedDestroy_ = true;
+    LogInfo("MPSegment init(%s) ok", dictPath.c_str());
+  }
+  MPSegment(const DictTrie* dictTrie)
+    : dictTrie_(dictTrie), isNeedDestroy_(false) {
+    assert(dictTrie_);
+  }
+  virtual ~MPSegment() {
+    if(isNeedDestroy_) {
+      delete dictTrie_;
+    }
+  }
 
-    class MPSegment: public SegmentBase
-    {
-        protected:
-            DictTrie _dictTrie;
+  bool isUserDictSingleChineseWord(const Unicode::value_type & value) const {
+    return dictTrie_->isUserDictSingleChineseWord(value);
+  }
 
-        public:
-            MPSegment(){};
-            MPSegment(const string& dictPath, const string& userDictPath = "")
-            {
-                LIMONP_CHECK(init(dictPath, userDictPath));
-            };
-            virtual ~MPSegment(){};
-        public:
-            bool init(const string& dictPath, const string& userDictPath = "")
-            {
-                LIMONP_CHECK(_dictTrie.init(dictPath, userDictPath));
-                LogInfo("MPSegment init(%s) ok", dictPath.c_str());
-                return true;
-            }
-            bool isUserDictSingleChineseWord(const Unicode::value_type & value) const
-            {
-                return _dictTrie.isUserDictSingleChineseWord(value);
-            }
-        public:
-            using SegmentBase::cut;
-            virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
-            {
-                if(begin == end)
-                {
-                    return false;
-                }
+  using SegmentBase::cut;
+  virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const {
+    vector<Unicode> words;
+    words.reserve(end - begin);
+    if(!cut(begin, end, words)) {
+      return false;
+    }
+    size_t offset = res.size();
+    res.resize(res.size() + words.size());
+    for(size_t i = 0; i < words.size(); i++) {
+      TransCode::encode(words[i], res[i + offset]);
+    }
+    return true;
+  }
 
-                vector<Unicode> words;
-                words.reserve(end - begin);
-                if(!cut(begin, end, words))
-                {
-                    return false;
-                }
-                size_t offset = res.size();
-                res.resize(res.size() + words.size());
-                for(size_t i = 0; i < words.size(); i++)
-                {
-                    if(!TransCode::encode(words[i], res[i + offset]))
-                    {
-                        LogError("encode failed.");
-                        res[i + offset].clear();
-                    }
-                }
-                return true;
-            }
+  bool cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<Unicode>& res) const {
+    vector<SegmentChar> segmentChars;
 
-            bool cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<Unicode>& res) const
-            {
-                if(end == begin)
-                {
-                    return false;
-                }
-                vector<SegmentChar> segmentChars(end - begin);
+    dictTrie_->find(begin, end, segmentChars);
 
-                //calc DAG
-                for(size_t i = 0; i < segmentChars.size(); i ++)
-                {
-                    segmentChars[i].uniCh = *(begin + i);
-                    segmentChars[i].dag.clear();
-                    _dictTrie.find(begin + i, end, segmentChars[i].dag, i);
-                    segmentChars[i].dag.insert(pair<DagType::key_type, DagType::mapped_type>(i, NULL));
-                }
+    calcDP_(segmentChars);
 
-                _calcDP(segmentChars);
+    cut_(segmentChars, res);
 
-                if(!_cut(segmentChars, res))
-                {
-                    LogError("_cut failed.");
-                    return false;
-                }
+    return true;
+  }
+  const DictTrie* getDictTrie() const {
+    return dictTrie_;
+  }
 
-                return true;
-            }
-            const DictTrie* getDictTrie() const 
-            {
-                return &_dictTrie;
-            }
+ private:
+  void calcDP_(vector<SegmentChar>& segmentChars) const {
+    size_t nextPos;
+    const DictUnit* p;
+    double val;
 
-        private:
-            void _calcDP(vector<SegmentChar>& SegmentChars) const
-            {
-                size_t nextPos;
-                const DictUnit* p;
-                double val;
+    for(vector<SegmentChar>::reverse_iterator rit = segmentChars.rbegin(); rit != segmentChars.rend(); rit++) {
+      rit->pInfo = NULL;
+      rit->weight = MIN_DOUBLE;
+      assert(!rit->dag.empty());
+      for(DagType::const_iterator it = rit->dag.begin(); it != rit->dag.end(); it++) {
+        nextPos = it->first;
+        p = it->second;
+        val = 0.0;
+        if(nextPos + 1 < segmentChars.size()) {
+          val += segmentChars[nextPos + 1].weight;
+        }
 
-                for(int i = SegmentChars.size() - 1; i >= 0; i--)
-                {
-                    SegmentChars[i].pInfo = NULL;
-                    SegmentChars[i].weight = MIN_DOUBLE;
-                    for(DagType::const_iterator it = SegmentChars[i].dag.begin(); it != SegmentChars[i].dag.end(); it++)
-                    {
-                        nextPos = it->first;
-                        p = it->second;
-                        val = 0.0;
-                        if(nextPos + 1 < SegmentChars.size())
-                        {
-                            val += SegmentChars[nextPos + 1].weight;
-                        }
+        if(p) {
+          val += p->weight;
+        } else {
+          val += dictTrie_->getMinWeight();
+        }
+        if(val > rit->weight) {
+          rit->pInfo = p;
+          rit->weight = val;
+        }
+      }
+    }
+  }
+  void cut_(const vector<SegmentChar>& segmentChars, 
+        vector<Unicode>& res) const {
+    size_t i = 0;
+    while(i < segmentChars.size()) {
+      const DictUnit* p = segmentChars[i].pInfo;
+      if(p) {
+        res.push_back(p->word);
+        i += p->word.size();
+      } else { //single chinese word
+        res.push_back(Unicode(1, segmentChars[i].uniCh));
+        i++;
+      }
+    }
+  }
 
-                        if(p)
-                        {
-                            val += p->weight; 
-                        }
-                        else
-                        {
-                            val += _dictTrie.getMinWeight();
-                        }
-                        if(val > SegmentChars[i].weight)
-                        {
-                            SegmentChars[i].pInfo = p;
-                            SegmentChars[i].weight = val;
-                        }
-                    }
-                }
-            }
-            bool _cut(const vector<SegmentChar>& segmentChars, vector<Unicode>& res)const
-            {
-                size_t i = 0;
-                while(i < segmentChars.size())
-                {
-                    const DictUnit* p = segmentChars[i].pInfo;
-                    if(p)
-                    {
-                        res.push_back(p->word);
-                        i += p->word.size();
-                    }
-                    else//single chinese word
-                    {
-                        res.push_back(Unicode(1, segmentChars[i].uniCh));
-                        i++;
-                    }
-                }
-                return true;
-            }
+ private:
+  const DictTrie* dictTrie_;
+  bool isNeedDestroy_;
+}; // class MPSegment
 
-
-    };
-}
+} // namespace CppJieba
 
 #endif

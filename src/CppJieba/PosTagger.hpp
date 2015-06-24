@@ -5,56 +5,78 @@
 #include "Limonp/StringUtil.hpp"
 #include "DictTrie.hpp"
 
-namespace CppJieba
-{
-    using namespace Limonp;
+namespace CppJieba {
+using namespace Limonp;
 
-    class PosTagger
-    {
-        private:
-            MixSegment _segment;
-            DictTrie _dictTrie;
+static const char* const POS_M = "m";
+static const char* const POS_ENG = "eng";
+static const char* const POS_X = "x";
 
-        public:
-            PosTagger(){};
-            PosTagger(const string& dictPath, const string& hmmFilePath, const string& charStatus, const string& startProb, const string& emitProb, const string& endProb, const string& transProb)
-            {
-                LIMONP_CHECK(init(dictPath, hmmFilePath, charStatus, startProb, emitProb, endProb, transProb));
-            };
-            ~PosTagger(){};
-        public:
-            bool init(const string& dictPath, const string& hmmFilePath, const string& charStatus, const string& startProb, const string& emitProb, const string& endProb, const string& transProb)
-            {
-                LIMONP_CHECK(_dictTrie.init(dictPath));
-                LIMONP_CHECK(_segment.init(dictPath, hmmFilePath));
-                return true;
-            };
+class PosTagger {
+ public:
+  PosTagger(const string& dictPath,
+    const string& hmmFilePath,
+    const string& userDictPath = "")
+    : segment_(dictPath, hmmFilePath, userDictPath) {
+  }
+  PosTagger(const DictTrie* dictTrie, const HMMModel* model) 
+    : segment_(dictTrie, model) {
+  }
+  ~PosTagger() {
+  }
 
-            bool tag(const string& src, vector<pair<string, string> >& res)
-            {
-                vector<string> cutRes;
-                if (!_segment.cut(src, cutRes))
-                {
-                    LogError("_mixSegment cut failed");
-                    return false;
-                }
+  bool tag(const string& src, vector<pair<string, string> >& res) const {
+    vector<string> cutRes;
+    if (!segment_.cut(src, cutRes)) {
+      LogError("mixSegment_ cut failed");
+      return false;
+    }
 
-                const DictUnit *tmp = NULL;
-                Unicode unico;
-                for (vector<string>::iterator itr = cutRes.begin(); itr != cutRes.end(); ++itr)
-                {
-                    if (!TransCode::decode(*itr, unico))
-                    {
-                        LogError("decode failed.");
-                        return false;
-                    }
-                    tmp = _dictTrie.find(unico.begin(), unico.end());
-                    res.push_back(make_pair(*itr, tmp == NULL ? "x" : tmp->tag));
-                }
-                tmp = NULL;
-                return !res.empty();
-            }
-    };
-}
+    const DictUnit *tmp = NULL;
+    Unicode unico;
+    const DictTrie * dict = segment_.getDictTrie();
+    assert(dict != NULL);
+    for (vector<string>::iterator itr = cutRes.begin(); itr != cutRes.end(); ++itr) {
+      if (!TransCode::decode(*itr, unico)) {
+        LogError("decode failed.");
+        return false;
+      }
+      tmp = dict->find(unico.begin(), unico.end());
+      if(tmp == NULL || tmp->tag.empty()) {
+        res.push_back(make_pair(*itr, specialRule_(unico)));
+      } else {
+        res.push_back(make_pair(*itr, tmp->tag));
+      }
+    }
+    return !res.empty();
+  }
+ private:
+  const char* specialRule_(const Unicode& unicode) const {
+    size_t m = 0;
+    size_t eng = 0;
+    for(size_t i = 0; i < unicode.size() && eng < unicode.size() / 2; i++) {
+      if(unicode[i] < 0x80) {
+        eng ++;
+        if('0' <= unicode[i] && unicode[i] <= '9') {
+          m++;
+        }
+      }
+    }
+    // ascii char is not found
+    if(eng == 0) {
+      return POS_X;
+    }
+    // all the ascii is number char
+    if(m == eng) {
+      return POS_M;
+    }
+    // the ascii chars contain english letter
+    return POS_ENG;
+  }
+ private:
+  MixSegment segment_;
+}; // class PosTagger
+
+} // namespace CppJieba
 
 #endif

@@ -1,21 +1,25 @@
 #ifndef LIMONP_INITONOFF_H
 #define LIMONP_INITONOFF_H
 
-namespace Limonp
-{
-    class InitOnOff
-    {
-        public:
-            InitOnOff(){_setInitFlag(false);};
-            ~InitOnOff(){};
-        protected:
-            bool _isInited;
-            bool _getInitFlag()const{return _isInited;};
-            bool _setInitFlag(bool flag){return _isInited = flag;};
-        public:
-            operator bool() const {return _getInitFlag();};
+namespace Limonp {
+class InitOnOff {
+ public:
+  InitOnOff():isInited_(false) {};
+  ~InitOnOff() {};
+ protected:
+  bool isInited_;
+  bool getInitFlag_()const {
+    return isInited_;
+  };
+  bool setInitFlag_(bool flag) {
+    return isInited_ = flag;
+  };
+ public:
+  operator bool() const {
+    return getInitFlag_();
+  };
 
-    };
+};
 }
 
 #endif
