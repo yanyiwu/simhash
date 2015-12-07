@@ -1,13 +1,13 @@
 #ifndef SIMHASH_SIMHASHER_HPP
 #define SIMHASH_SIMHASHER_HPP
 
-#include "CppJieba/KeywordExtractor.hpp"
+#include "jieba/KeywordExtractor.hpp"
 #include "hashes/jenkins.h"
 
 namespace Simhash
 {
-    using namespace CppJieba;
-    class Simhasher: public NonCopyable
+    using namespace cppjieba;
+    class Simhasher
     {
         private:
             enum{BITS_LENGTH = 64};
@@ -17,10 +17,10 @@ namespace Simhash
             Simhasher(const string& dictPath, const string& modelPath, const string& idfPath, const string& stopWords): _extractor(dictPath, modelPath, idfPath, stopWords)
             {}
             ~Simhasher(){};
-        public:
+
             bool extract(const string& text, vector<pair<string,double> > & res, size_t topN) const
             {
-                return _extractor.extract(text, res, topN);
+                return _extractor.Extract(text, res, topN);
             }
             bool make(const string& text, size_t topN, vector<pair<uint64_t, double> >& res) const
             {

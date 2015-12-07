@@ -1,5 +1,9 @@
 # Simhash ChangeLog
 
+## next version
+
+1. 升级 [CppJieba] 到 v4.1.2 版本。
+
 ## v0.9.5
 
 1. 使用[CppJieba] v3.0.1 ，修复一些兼容性问题。
