@@ -1,4 +1,8 @@
-# 专门针对中文文档的simhash算法库 [English](README_EN.md) [![Build Status](https://travis-ci.org/yanyiwu/simhash.png?branch=master)](https://travis-ci.org/yanyiwu/simhash)
+# 专门针对中文文档的simhash算法库 [English](README_EN.md) 
+
+[![Build Status](https://travis-ci.org/yanyiwu/simhash.png?branch=master)](https://travis-ci.org/yanyiwu/simhash)
+[![Author](https://img.shields.io/badge/author-@yanyiwu-blue.svg?style=flat)](http://yanyiwu.com/) 
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://yanyiwu.mit-license.org)
 
 ## 简介
 
