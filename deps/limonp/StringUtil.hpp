@@ -25,7 +25,7 @@
 
 namespace limonp {
 using namespace std;
-inline string string_format(const char* fmt, ...) {
+inline string StringFormat(const char* fmt, ...) {
   int size = 256;
   std::string str;
   va_list ap;
@@ -47,7 +47,7 @@ inline string string_format(const char* fmt, ...) {
 }
 
 template<class T>
-void join(T begin, T end, string& res, const string& connector) {
+void Join(T begin, T end, string& res, const string& connector) {
   if(begin == end) {
     return;
   }
@@ -62,101 +62,101 @@ void join(T begin, T end, string& res, const string& connector) {
 }
 
 template<class T>
-string join(T begin, T end, const string& connector) {
+string Join(T begin, T end, const string& connector) {
   string res;
-  join(begin ,end, res, connector);
+  Join(begin ,end, res, connector);
   return res;
 }
 
-inline string& upper(string& str) {
+inline string& Upper(string& str) {
   transform(str.begin(), str.end(), str.begin(), (int (*)(int))toupper);
   return str;
 }
 
-inline string& lower(string& str) {
+inline string& Lower(string& str) {
   transform(str.begin(), str.end(), str.begin(), (int (*)(int))tolower);
   return str;
 }
 
-inline std::string& ltrim(std::string &s) {
+inline std::string& LTrim(std::string &s) {
   s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
   return s;
 }
 
-inline std::string& rtrim(std::string &s) {
+inline std::string& RTrim(std::string &s) {
   s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
   return s;
 }
 
-inline std::string& trim(std::string &s) {
-  return ltrim(rtrim(s));
+inline std::string& Trim(std::string &s) {
+  return LTrim(RTrim(s));
 }
 
-inline std::string& ltrim(std::string & s, char x) {
+inline std::string& LTrim(std::string & s, char x) {
   s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::bind2nd(std::equal_to<char>(), x))));
   return s;
 }
 
-inline std::string& rtrim(std::string & s, char x) {
+inline std::string& RTrim(std::string & s, char x) {
   s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::bind2nd(std::equal_to<char>(), x))).base(), s.end());
   return s;
 }
 
-inline std::string& trim(std::string &s, char x) {
-  return ltrim(rtrim(s, x), x);
+inline std::string& Trim(std::string &s, char x) {
+  return LTrim(RTrim(s, x), x);
 }
 
-inline void split(const string& src, vector<string>& res, const string& pattern, size_t maxsplit = string::npos) {
+inline void Split(const string& src, vector<string>& res, const string& pattern, size_t maxsplit = string::npos) {
   res.clear();
-  size_t start = 0;
+  size_t Start = 0;
   size_t end = 0;
   string sub;
-  while(start < src.size()) {
-    end = src.find_first_of(pattern, start);
+  while(Start < src.size()) {
+    end = src.find_first_of(pattern, Start);
     if(string::npos == end || res.size() >= maxsplit) {
-      sub = src.substr(start);
-      trim(sub);
+      sub = src.substr(Start);
+      Trim(sub);
       res.push_back(sub);
       return;
     }
-    sub = src.substr(start, end - start);
-    trim(sub);
+    sub = src.substr(Start, end - Start);
+    Trim(sub);
     res.push_back(sub);
-    start = end + 1;
+    Start = end + 1;
   }
   return;
 }
 
-inline vector<string> split(const string& src, const string& pattern, size_t maxsplit = string::npos) {
+inline vector<string> Split(const string& src, const string& pattern, size_t maxsplit = string::npos) {
   vector<string> res;
-  split(src, res, pattern, maxsplit);
+  Split(src, res, pattern, maxsplit);
   return res;
 }
 
-inline bool startsWith(const string& str, const string& prefix) {
+inline bool StartsWith(const string& str, const string& prefix) {
   if(prefix.length() > str.length()) {
     return false;
   }
   return 0 == str.compare(0, prefix.length(), prefix);
 }
 
-inline bool endsWith(const string& str, const string& suffix) {
+inline bool EndsWith(const string& str, const string& suffix) {
   if(suffix.length() > str.length()) {
     return false;
   }
   return 0 == str.compare(str.length() -  suffix.length(), suffix.length(), suffix);
 }
 
-inline bool isInStr(const string& str, char ch) {
+inline bool IsInStr(const string& str, char ch) {
   return str.find(ch) != string::npos;
 }
 
-inline uint16_t twocharToUint16(char high, char low) {
+inline uint16_t TwocharToUint16(char high, char low) {
   return (((uint16_t(high) & 0x00ff ) << 8) | (uint16_t(low) & 0x00ff));
 }
 
 template <class Uint16Container>
-bool utf8ToUnicode(const char * const str, size_t len, Uint16Container& vec) {
+bool Utf8ToUnicode(const char * const str, size_t len, Uint16Container& vec) {
   if(!str) {
     return false;
   }
@@ -185,13 +185,94 @@ bool utf8ToUnicode(const char * const str, size_t len, Uint16Container& vec) {
   }
   return true;
 }
+
 template <class Uint16Container>
-bool utf8ToUnicode(const string& str, Uint16Container& vec) {
-  return utf8ToUnicode(str.c_str(), str.size(), vec);
+bool Utf8ToUnicode(const string& str, Uint16Container& vec) {
+  return Utf8ToUnicode(str.c_str(), str.size(), vec);
+}
+
+template <class Uint32Container>
+bool Utf8ToUnicode32(const string& str, Uint32Container& vec) {
+  uint32_t tmp;
+  vec.clear();
+  for(size_t i = 0; i < str.size();) {
+    if(!(str[i] & 0x80)) { // 0xxxxxxx
+      // 7bit, total 7bit
+      tmp = (uint8_t)(str[i]) & 0x7f;
+      i++;
+    } else if ((uint8_t)str[i] <= 0xdf && i + 1 < str.size()) { // 110xxxxxx
+      // 5bit, total 5bit
+      tmp = (uint8_t)(str[i]) & 0x1f;
+
+      // 6bit, total 11bit
+      tmp <<= 6;
+      tmp |= (uint8_t)(str[i+1]) & 0x3f;
+      i += 2;
+    } else if((uint8_t)str[i] <= 0xef && i + 2 < str.size()) { // 1110xxxxxx
+      // 4bit, total 4bit
+      tmp = (uint8_t)(str[i]) & 0x0f;
+
+      // 6bit, total 10bit
+      tmp <<= 6;
+      tmp |= (uint8_t)(str[i+1]) & 0x3f;
+
+      // 6bit, total 16bit
+      tmp <<= 6;
+      tmp |= (uint8_t)(str[i+2]) & 0x3f;
+
+      i += 3;
+    } else if((uint8_t)str[i] <= 0xf7 && i + 3 < str.size()) { // 11110xxxx
+      // 3bit, total 3bit
+      tmp = (uint8_t)(str[i]) & 0x07;
+
+      // 6bit, total 9bit
+      tmp <<= 6;
+      tmp |= (uint8_t)(str[i+1]) & 0x3f;
+
+      // 6bit, total 15bit
+      tmp <<= 6;
+      tmp |= (uint8_t)(str[i+2]) & 0x3f;
+
+      // 6bit, total 21bit
+      tmp <<= 6;
+      tmp |= (uint8_t)(str[i+3]) & 0x3f;
+
+      i += 4;
+    } else {
+      return false;
+    }
+    vec.push_back(tmp);
+  }
+  return true;
+}
+
+template <class Uint32ContainerConIter>
+void Unicode32ToUtf8(Uint32ContainerConIter begin, Uint32ContainerConIter end, string& res) {
+  res.clear();
+  uint32_t ui;
+  while(begin != end) {
+    ui = *begin;
+    if(ui <= 0x7f) {
+      res += char(ui);
+    } else if(ui <= 0x7ff) {
+      res += char(((ui >> 6) & 0x1f) | 0xc0);
+      res += char((ui & 0x3f) | 0x80);
+    } else if(ui <= 0xffff) {
+      res += char(((ui >> 12) & 0x0f) | 0xe0);
+      res += char(((ui >> 6) & 0x3f) | 0x80);
+      res += char((ui & 0x3f) | 0x80);
+    } else {
+      res += char(((ui >> 18) & 0x03) | 0xf0);
+      res += char(((ui >> 12) & 0x3f) | 0x80);
+      res += char(((ui >> 6) & 0x3f) | 0x80);
+      res += char((ui & 0x3f) | 0x80);
+    }
+    begin ++;
+  }
 }
 
 template <class Uint16ContainerConIter>
-void unicodeToUtf8(Uint16ContainerConIter begin, Uint16ContainerConIter end, string& res) {
+void UnicodeToUtf8(Uint16ContainerConIter begin, Uint16ContainerConIter end, string& res) {
   res.clear();
   uint16_t ui;
   while(begin != end) {
@@ -212,7 +293,7 @@ void unicodeToUtf8(Uint16ContainerConIter begin, Uint16ContainerConIter end, str
 
 
 template <class Uint16Container>
-bool gbkTrans(const char* const str, size_t len, Uint16Container& vec) {
+bool GBKTrans(const char* const str, size_t len, Uint16Container& vec) {
   vec.clear();
   if(!str) {
     return true;
@@ -236,12 +317,12 @@ bool gbkTrans(const char* const str, size_t len, Uint16Container& vec) {
 }
 
 template <class Uint16Container>
-bool gbkTrans(const string& str, Uint16Container& vec) {
-  return gbkTrans(str.c_str(), str.size(), vec);
+bool GBKTrans(const string& str, Uint16Container& vec) {
+  return GBKTrans(str.c_str(), str.size(), vec);
 }
 
 template <class Uint16ContainerConIter>
-void gbkTrans(Uint16ContainerConIter begin, Uint16ContainerConIter end, string& res) {
+void GBKTrans(Uint16ContainerConIter begin, Uint16ContainerConIter end, string& res) {
   res.clear();
   //pair<char, char> pa;
   char first, second;
@@ -262,7 +343,7 @@ void gbkTrans(Uint16ContainerConIter begin, Uint16ContainerConIter end, string& 
 /*
  * format example: "%Y-%m-%d %H:%M:%S"
  */
-inline void getTime(const string& format, string&  timeStr) {
+inline void GetTime(const string& format, string&  timeStr) {
   time_t timeNow;
   time(&timeNow);
   timeStr.resize(64);
@@ -270,8 +351,8 @@ inline void getTime(const string& format, string&  timeStr) {
   timeStr.resize(len);
 }
 
-inline string pathJoin(const string& path1, const string& path2) {
-  if(endsWith(path1, "/")) {
+inline string PathJoin(const string& path1, const string& path2) {
+  if(EndsWith(path1, "/")) {
     return path1 + path2;
   }
   return path1 + "/" + path2;

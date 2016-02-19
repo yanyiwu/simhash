@@ -3,102 +3,84 @@
 
 #include "Thread.hpp"
 #include "BlockingQueue.hpp"
+#include "BoundedBlockingQueue.hpp"
+#include "Closure.hpp"
 
 namespace limonp {
-class ITask {
- public:
-  virtual void run() = 0;
-  virtual ~ITask() {}
-};
 
-template <class TaskType>
-ITask* CreateTask() {
-  return new TaskType();
-}
-template <class TaskType, class ArgType>
-ITask* CreateTask(ArgType arg) {
-  return new TaskType(arg);
-}
-template <class TaskType, class ArgType0, class ArgType1>
-ITask* CreateTask(ArgType0 arg0, ArgType1 arg1) {
-  return new TaskType(arg0, arg1);
-}
-template <class TaskType, class ArgType0, class ArgType1, class ArgType2>
-ITask* CreateTask(ArgType0 arg0, ArgType1 arg1, ArgType2 arg2) {
-  return new TaskType(arg0, arg1, arg2);
-}
+using namespace std;
 
 //class ThreadPool;
 class ThreadPool: NonCopyable {
- private:
+ public:
   class Worker: public IThread {
-   private:
-    ThreadPool * ptThreadPool_;
    public:
     Worker(ThreadPool* pool): ptThreadPool_(pool) {
       assert(ptThreadPool_);
     }
     virtual ~Worker() {
     }
-   public:
-    virtual void run() {
-      while(true) {
-        ITask * task = ptThreadPool_->queue_.pop();
-        if(task == NULL) {
+
+    virtual void Run() {
+      while (true) {
+        ClosureInterface* closure = ptThreadPool_->queue_.Pop();
+        if (closure == NULL) {
           break;
         }
         try {
-          task->run();
+          closure->Run();
         } catch(std::exception& e) {
-          cerr << "file:" << __FILE__ 
-               << ", line:" << __LINE__ 
-               << ", " << e.what() << endl;
+          LOG(ERROR) << e.what();
         } catch(...) {
-          cerr << "file:" << __FILE__ 
-               << ", line:" << __LINE__ 
-               << ", unknown exception." << endl;
+          LOG(ERROR) << " unknown exception.";
         }
-        delete task;
+        delete closure;
       }
     }
-  };
- private:
-  friend class Worker;
- private:
-  vector<IThread*> threads_;
-  BoundedBlockingQueue<ITask*> queue_;
-  //mutable MutexLock mutex_;
-  //Condition isEmpty__;
- public:
-  ThreadPool(size_t threadNum, size_t queueMaxSize): threads_(threadNum), queue_(queueMaxSize) { //, mutex_(), isEmpty__(mutex_)
-    assert(threadNum);
-    assert(queueMaxSize);
+   private:
+    ThreadPool * ptThreadPool_;
+  }; // class Worker
+
+  ThreadPool(size_t thread_num)
+    : threads_(thread_num), 
+      queue_(thread_num) {
+    assert(thread_num);
     for(size_t i = 0; i < threads_.size(); i ++) {
       threads_[i] = new Worker(this);
     }
   }
   ~ThreadPool() {
+    Stop();
+  }
+
+  void Start() {
+    for(size_t i = 0; i < threads_.size(); i++) {
+      threads_[i]->Start();
+    }
+  }
+  void Stop() {
     for(size_t i = 0; i < threads_.size(); i ++) {
-      queue_.push(NULL);
+      queue_.Push(NULL);
     }
     for(size_t i = 0; i < threads_.size(); i ++) {
-      threads_[i]->join();
+      threads_[i]->Join();
       delete threads_[i];
     }
+    threads_.clear();
   }
 
- public:
-  void start() {
-    for(size_t i = 0; i < threads_.size(); i++) {
-      threads_[i]->start();
-    }
-  }
-
-  void add(ITask* task) {
+  void Add(ClosureInterface* task) {
     assert(task);
-    queue_.push(task);
+    queue_.Push(task);
   }
-};
-}
 
-#endif
+ private:
+  friend class Worker;
+
+  vector<IThread*> threads_;
+  BoundedBlockingQueue<ClosureInterface*> queue_;
+}; // class ThreadPool
+
+} // namespace limonp
+
+#endif // LIMONP_THREAD_POOL_HPP
