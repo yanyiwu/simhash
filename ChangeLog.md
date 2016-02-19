@@ -1,6 +1,6 @@
 # Simhash ChangeLog
 
-## next version
+## v0.10.0
 
 + add new directory: `deps` for `cppjieba` and `limonp`
 + change `namespace Simhash` to `namespace simhash` 
