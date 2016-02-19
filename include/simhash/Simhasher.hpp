@@ -27,7 +27,7 @@ namespace simhash
                 vector<pair<string, double> > wordweights;
                 if(!extract(text, wordweights, topN))
                 {
-                    LogError("extract failed.");
+                    LOG(ERROR) << "extract failed";
                     return false;
                 }
                 res.resize(wordweights.size());
