@@ -8,6 +8,7 @@
 + mv `src/` to `include/`
 
 + upgrade limonp to v0.5.4
++ upgrade cppjieba to v4.5.0
 
 ## v0.9.6
 

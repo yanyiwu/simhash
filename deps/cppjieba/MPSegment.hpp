@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <set>
 #include <cassert>
-#include "limonp/Logger.hpp"
+#include "limonp/Logging.hpp"
 #include "DictTrie.hpp"
 #include "SegmentBase.hpp"
 
@@ -12,10 +12,8 @@ namespace cppjieba {
 
 class MPSegment: public SegmentBase {
  public:
-  MPSegment(const string& dictPath, const string& userDictPath = "") {
-    dictTrie_ = new DictTrie(dictPath, userDictPath);
-    isNeedDestroy_ = true;
-    LogInfo("MPSegment init(%s) ok", dictPath.c_str());
+  MPSegment(const string& dictPath, const string& userDictPath = "")
+    : dictTrie_(new DictTrie(dictPath, userDictPath)), isNeedDestroy_(true) {
   }
   MPSegment(const DictTrie* dictTrie)
     : dictTrie_(dictTrie), isNeedDestroy_(false) {

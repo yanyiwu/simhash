@@ -1,9 +1,9 @@
 #ifndef CPPJIEBA_KEYWORD_EXTRACTOR_H
 #define CPPJIEBA_KEYWORD_EXTRACTOR_H
 
-#include "MixSegment.hpp"
 #include <cmath>
 #include <set>
+#include "Jieba.hpp"
 
 namespace cppjieba {
 using namespace limonp;
@@ -24,7 +24,14 @@ class KeywordExtractor {
         const HMMModel* model,
         const string& idfPath, 
         const string& stopWordPath) 
-    : segment_(dictTrie, model){
+    : segment_(dictTrie, model) {
+    LoadIdfDict(idfPath);
+    LoadStopWordDict(stopWordPath);
+  }
+  KeywordExtractor(const Jieba& jieba, 
+        const string& idfPath, 
+        const string& stopWordPath) 
+    : segment_(jieba.GetDictTrie(), jieba.GetHMMModel()) {
     LoadIdfDict(idfPath);
     LoadStopWordDict(stopWordPath);
   }
@@ -79,9 +86,7 @@ class KeywordExtractor {
  private:
   void LoadIdfDict(const string& idfPath) {
     ifstream ifs(idfPath.c_str());
-    if (!ifs.is_open()) {
-      LogFatal("open %s failed.", idfPath.c_str());
-    }
+    CHECK(ifs.is_open()) << "open " << idfPath << " failed";
     string line ;
     vector<string> buf;
     double idf = 0.0;
@@ -90,12 +95,12 @@ class KeywordExtractor {
     for (; getline(ifs, line); lineno++) {
       buf.clear();
       if (line.empty()) {
-        LogError("line[%d] empty. skipped.", lineno);
+        LOG(ERROR) << "lineno: " << lineno << " empty. skipped.";
         continue;
       }
-      split(line, buf, " ");
+      Split(line, buf, " ");
       if (buf.size() != 2) {
-        LogError("line %d [%s] illegal. skipped.", lineno, line.c_str());
+        LOG(ERROR) << "line: " << line << ", lineno: " << lineno << " empty. skipped.";
         continue;
       }
       idf = atof(buf[1].c_str());
@@ -110,9 +115,7 @@ class KeywordExtractor {
   }
   void LoadStopWordDict(const string& filePath) {
     ifstream ifs(filePath.c_str());
-    if (!ifs.is_open()) {
-      LogFatal("open %s failed.", filePath.c_str());
-    }
+    CHECK(ifs.is_open()) << "open " << filePath << " failed";
     string line ;
     while (getline(ifs, line)) {
       stopWords_.insert(line);
@@ -137,8 +140,8 @@ class KeywordExtractor {
   double idfAverage_;
 
   unordered_set<string> stopWords_;
-};
-}
+}; // class Jieba
+} // namespace cppjieba
 
 #endif
 
