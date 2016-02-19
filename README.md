@@ -57,7 +57,10 @@ simhash值是: 17831459094038722629
 
 ## 客服
 
-`i@yanyiwu.com`
++ Email: `i@yanyiwu.com`
++ QQ: 64162451
+
+![image](http://7viirv.com1.z0.glb.clouddn.com/5a7d1b5c0d_yanyiwu_personal_qrcodes.jpg)
 
 [simhash算法原理及实现]:http://yanyiwu.com/work/2014/01/30/simhash-shi-xian-xiang-jie.html
 [CppJieba]:https://github.com/yanyiwu/cppjieba
