@@ -1,7 +1,7 @@
-#include "src/Simhasher.hpp"
+#include "simhash/Simhasher.hpp"
 #include "gtest/gtest.h"
 
-using namespace Simhash;
+using namespace simhash;
 
 static bool loadFile2Str(const string& filePath, string& s)
 {

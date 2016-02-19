@@ -1,5 +1,12 @@
 # Simhash ChangeLog
 
+## next version
+
++ add new directory: `deps` for `cppjieba` and `limonp`
++ change `namespace Simhash` to `namespace simhash` 
++ mv `src/main.cpp` to `example/demo.cpp`
++ mv `src/` to `include/`
+
 ## v0.9.6
 
 1. 升级 [CppJieba] 到 v4.1.2 版本。

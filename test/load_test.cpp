@@ -1,11 +1,11 @@
 #include <iostream>
 #include <ctime>
 #include <fstream>
-#include "../src/Simhasher.hpp"
+#include "simhash/Simhasher.hpp"
 
-using namespace Simhash;
+using namespace simhash;
 
-void simhash(size_t times = 2000)
+void LoadTest(size_t times = 2000)
 {
     Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     uint64_t value;
@@ -27,6 +27,6 @@ void simhash(size_t times = 2000)
 
 int main(int argc, char ** argv)
 {
-    simhash();
+    LoadTest();
     return EXIT_SUCCESS;
 }

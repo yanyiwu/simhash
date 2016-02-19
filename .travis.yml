@@ -6,9 +6,7 @@ script:
   - cd build
   - cmake ..
   - make
-  - ./test/test.run
-  - ./test/load_test
-  - ./bin/simhash.demo
+  - make test
 compiler:
   - clang
   - gcc

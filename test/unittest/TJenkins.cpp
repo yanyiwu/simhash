@@ -1,11 +1,11 @@
-#include "src/hashes/jenkins.h"
+#include "simhash/jenkins.h"
 #include "gtest/gtest.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 
 using namespace std;
-using namespace Simhash;
+using namespace simhash;
 
 TEST(JenkinsTest, Test1)
 {

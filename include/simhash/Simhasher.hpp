@@ -1,10 +1,10 @@
 #ifndef SIMHASH_SIMHASHER_HPP
 #define SIMHASH_SIMHASHER_HPP
 
-#include "jieba/KeywordExtractor.hpp"
-#include "hashes/jenkins.h"
+#include "cppjieba/KeywordExtractor.hpp"
+#include "jenkins.h"
 
-namespace Simhash
+namespace simhash
 {
     using namespace cppjieba;
     class Simhasher

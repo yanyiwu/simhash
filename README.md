@@ -30,10 +30,16 @@ cmake ..
 make
 ```
 
+测试
+
+```
+make test
+```
+
 ### 演示
 
 ```sh
-./bin/simhash.demo
+./demo
 ```
 
 结果如下：
@@ -47,7 +53,7 @@ simhash值是: 17831459094038722629
 海明距离阈值默认设置为5，则isEqual结果为：1
 ```
 
-详情请看 `src/main.cpp`
+详情请看 [example/demo.cpp](example/demo.cpp)
 
 ## 客服
 

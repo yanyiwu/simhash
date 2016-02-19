@@ -1,17 +1,18 @@
-
 #include <iostream>
 #include <fstream>
 
-#define LOGGER_LEVEL LL_WARN //this define can avoid some logs which you dont care about.
-#include "Simhasher.hpp"
-using namespace Simhash;
+//this define can avoid some logs which you don't need to care about.
+#define LOGGER_LEVEL LL_WARN 
+
+#include "simhash/Simhasher.hpp"
+using namespace simhash;
 
 int main(int argc, char** argv)
 {
     Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
     string s("我是蓝翔技工拖拉机学院手扶拖拉机专业的。不用多久，我就会升职加薪，当上总经理，出任CEO，走上人生巅峰。");
     size_t topN = 5;
-    uint64_t u64;
+    uint64_t u64 = 0;
     vector<pair<string ,double> > res;
     simhasher.extract(s, res, topN);
     simhasher.make(s, topN, u64);
