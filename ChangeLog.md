@@ -1,6 +1,6 @@
 # Simhash ChangeLog
 
-## next version
+## v0.10.1
 
 + upgrade cppjieba to v4.5.3
 
