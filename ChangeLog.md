@@ -1,5 +1,9 @@
 # Simhash ChangeLog
 
+## next version
+
++ upgrade cppjieba to v4.5.3
+
 ## v0.10.0
 
 + add new directory: `deps` for `cppjieba` and `limonp`
