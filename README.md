@@ -67,3 +67,7 @@ simhash值是: 17831459094038722629
 [CppJieba]:https://github.com/yanyiwu/cppjieba
 [jenkins]:https://github.com/seomoz/simhash-cpp/blob/master/src/hashes/jenkins.h
 [simhash\_server]:https://github.com/yanyiwu/simhash_server
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/yanyiwu/simhash/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
