@@ -5,6 +5,8 @@
 [![Author](https://img.shields.io/badge/author-@yanyiwu-blue.svg?style=flat)](http://yanyiwu.com/) 
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://yanyiwu.mit-license.org)
 
+[![logo](http://7viirv.com1.z0.glb.clouddn.com/SimhashLogo-v1.png)](https://github.com/yanyiwu/simhash)
+
 ## 简介
 
 此项目用来对中文文档计算出对应的 simhash 值。 simhash 是谷歌用来进行文本去重的算法，现在广泛应用在文本处理中。
