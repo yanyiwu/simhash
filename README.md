@@ -5,7 +5,7 @@
 [![Author](https://img.shields.io/badge/author-@yanyiwu-blue.svg?style=flat)](http://yanyiwu.com/) 
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://yanyiwu.mit-license.org)
 
-[![logo](http://7viirv.com1.z0.glb.clouddn.com/SimhashLogo-v1.png)](https://github.com/yanyiwu/simhash)
+[![logo](http://images.yanyiwu.com/SimhashLogo-v1.png)](https://github.com/yanyiwu/simhash)
 
 ## 简介
 
