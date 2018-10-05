@@ -71,5 +71,4 @@ simhash值是: 17831459094038722629
 [simhash\_server]:https://github.com/yanyiwu/simhash_server
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/yanyiwu/simhash/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
