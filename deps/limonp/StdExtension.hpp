@@ -16,8 +16,8 @@
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 namespace std {
-using std::tr1::unordered_map;
-using std::tr1::unordered_set;
+using std::unordered_map;
+using std::unordered_set;
 }
 
 #endif
