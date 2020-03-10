@@ -6,7 +6,7 @@
 #ifdef __APPLE__
 #include <unordered_map>
 #include <unordered_set>
-#elif(__cplusplus == 201103L)
+#elif(__cplusplus >= 201103L)
 #include <unordered_map>
 #include <unordered_set>
 #elif defined _MSC_VER
@@ -35,6 +35,19 @@ namespace std {
 
 template<typename T>
 ostream& operator << (ostream& os, const vector<T>& v) {
+  if(v.empty()) {
+    return os << "[]";
+  }
+  os<<"["<<v[0];
+  for(size_t i = 1; i < v.size(); i++) {
+    os<<", "<<v[i];
+  }
+  os<<"]";
+  return os;
+}
+
+template<>
+inline ostream& operator << (ostream& os, const vector<string>& v) {
   if(v.empty()) {
     return os << "[]";
   }
