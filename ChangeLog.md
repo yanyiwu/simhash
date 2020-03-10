@@ -1,5 +1,9 @@
 # Simhash ChangeLog
 
+## v1.0.0
+
++ [deps] update limonp to v0.6.2
+
 ## v0.10.1
 
 + upgrade cppjieba to v4.5.3
