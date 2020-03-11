@@ -68,7 +68,43 @@ namespace simhash
                 
                 return true;
             }
-            
+          
+            /**
+             * @brief
+             * Directly calculate weighted hash of pre-defined keywords.
+             */ 
+            static uint64_t make_from_predefined_keywords(const std::vector< std::pair<std::string, double> >& keywords) {
+                uint64_t v64 = 0;
+                std::vector< std::pair<uint64_t, double> > hashvalues;
+                jenkins _tmp_hasher;
+
+                hashvalues.resize(keywords.size());
+                for (int32_t i = 0; i < keywords.size(); ++i) {
+                    hashvalues[i].first = _tmp_hasher(keywords[i].first.c_str(), keywords[i].first.size(), 0);
+                    hashvalues[i].second = keywords[i].second;
+                }
+
+                vector<double> weights(BITS_LENGTH, 0.0);
+                const uint64_t u64_1(1);
+                for(size_t i = 0; i < hashvalues.size(); i++)
+                {
+                    for(size_t j = 0; j < BITS_LENGTH; j++)
+                    {
+                        weights [j] += (((u64_1 << j) & hashvalues[i].first) ? 1: -1) * hashvalues[i].second;
+                    }
+                }
+
+                for(size_t j = 0; j < BITS_LENGTH; j++)
+                {
+                    if(weights[j] > 0.0)
+                    {
+                        v64 |= (u64_1 << j);
+                    }
+                }
+
+                return v64;
+            }
+
             static bool isEqual(uint64_t lhs, uint64_t rhs, unsigned short n = 3)
             {
                 unsigned short cnt = 0;
