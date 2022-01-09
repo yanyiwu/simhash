@@ -1,5 +1,6 @@
 # 专门针对中文文档的simhash算法库 [English](README_EN.md) 
 
+[![CMake](https://github.com/yanyiwu/simhash/actions/workflows/cmake.yml/badge.svg)](https://github.com/yanyiwu/simhash/actions/workflows/cmake.yml)
 [![Build Status](https://travis-ci.org/yanyiwu/simhash.png?branch=master)](https://travis-ci.org/yanyiwu/simhash)
 [![Platform](https://img.shields.io/badge/platform-Linux,%20OS%20X,%20Windows-green.svg?style=flat)](https://github.com/yanyiwu/simhash)
 [![Author](https://img.shields.io/badge/author-@yanyiwu-blue.svg?style=flat)](http://yanyiwu.com/) 
