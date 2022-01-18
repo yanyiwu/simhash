@@ -1,0 +1,44 @@
+/// file: benchmarking.cpp
+/// date: 2022-01-17
+
+
+#include <benchmark/benchmark.h>
+#include "./lib/Simhasher_benchmark.h"
+
+using namespace simhash_benchmark;
+
+
+BENCHMARK(BENCHMARK_Simhasher_extract_text50_top5);
+BENCHMARK(BENCHMARK_Simhasher_extract_text50_top10);
+BENCHMARK(BENCHMARK_Simhasher_extract_text50_top15);
+BENCHMARK(BENCHMARK_Simhasher_extract_text50_top20);
+
+BENCHMARK(BENCHMARK_Simhasher_extract_text500_top5);
+
+
+BENCHMARK(BENCHMARK_Simhasher_make_text50_top5);
+BENCHMARK(BENCHMARK_Simhasher_make_text50_top10);
+BENCHMARK(BENCHMARK_Simhasher_make_text50_top15);
+BENCHMARK(BENCHMARK_Simhasher_make_text50_top20);
+
+
+BENCHMARK(BENCHMARK_Simhasher_binaryStringToUint64);
+BENCHMARK(BENCHMARK_Simhasher_toBinaryString);
+
+
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords5);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords10);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords20);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords50);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords100);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords200);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords500);
+BENCHMARK(BENCHMARK_Simhasher_make_from_predefined_keywords1000);
+
+
+BENCHMARK(BENCHMARK_Simhasher_binaryStringToUint64_isEqual);
+BENCHMARK(BENCHMARK_Simhasher_binaryStringToUint64_isEqual_10k);
+BENCHMARK(BENCHMARK_Simhasher_binaryStringToUint64_isEqual_1000k);
+
+
+BENCHMARK_MAIN();

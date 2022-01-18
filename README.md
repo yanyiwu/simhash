@@ -59,6 +59,48 @@ simhash值是: 17831459094038722629
 
 详情请看 [example/demo.cpp](example/demo.cpp)
 
+### Benchmark
+```sh
+./benchmark/benchmarking
+```
+结果如下:
+```
+Running ./benchmark/benchmarking
+Run on (16 X 2494.14 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x16)
+  L1 Instruction 32 KiB (x16)
+  L2 Unified 4096 KiB (x16)
+  L3 Unified 36608 KiB (x1)
+Load Average: 0.07, 0.04, 0.03
+***WARNING*** Library was built as DEBUG. Timings may be affected.
+-------------------------------------------------------------------------------------------------
+Benchmark                                                       Time             CPU   Iterations
+-------------------------------------------------------------------------------------------------
+BENCHMARK_Simhasher_extract_text50_top5                     13478 ns        13478 ns        52013
+BENCHMARK_Simhasher_extract_text50_top10                    13843 ns        13843 ns        50833
+BENCHMARK_Simhasher_extract_text50_top15                    13929 ns        13929 ns        49488
+BENCHMARK_Simhasher_extract_text50_top20                    13842 ns        13842 ns        50541
+BENCHMARK_Simhasher_extract_text500_top5                   184074 ns       184067 ns         3775
+BENCHMARK_Simhasher_make_text50_top5                        14457 ns        14457 ns        48341
+BENCHMARK_Simhasher_make_text50_top10                       15170 ns        15169 ns        46203
+BENCHMARK_Simhasher_make_text50_top15                       15585 ns        15585 ns        44903
+BENCHMARK_Simhasher_make_text50_top20                       15743 ns        15742 ns        44466
+BENCHMARK_Simhasher_binaryStringToUint64                    0.000 ns        0.000 ns   1000000000
+BENCHMARK_Simhasher_toBinaryString                           63.9 ns         63.9 ns     10937009
+BENCHMARK_Simhasher_make_from_predefined_keywords5            423 ns          423 ns      1644823
+BENCHMARK_Simhasher_make_from_predefined_keywords10           735 ns          735 ns       950156
+BENCHMARK_Simhasher_make_from_predefined_keywords20          1364 ns         1364 ns       508935
+BENCHMARK_Simhasher_make_from_predefined_keywords50          7876 ns         7875 ns        89006
+BENCHMARK_Simhasher_make_from_predefined_keywords100        21409 ns        21409 ns        32743
+BENCHMARK_Simhasher_make_from_predefined_keywords200        47469 ns        47468 ns        14728
+BENCHMARK_Simhasher_make_from_predefined_keywords500       124316 ns       124314 ns         5627
+BENCHMARK_Simhasher_make_from_predefined_keywords1000      251336 ns       251329 ns         2785
+BENCHMARK_Simhasher_binaryStringToUint64_isEqual            0.000 ns        0.000 ns   1000000000
+BENCHMARK_Simhasher_binaryStringToUint64_isEqual_10k        0.000 ns        0.000 ns   1000000000
+BENCHMARK_Simhasher_binaryStringToUint64_isEqual_1000k      0.000 ns        0.000 ns   1000000000
+```
+
 ## 客服
 
 + Email: `i@yanyiwu.com`
