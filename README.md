@@ -101,6 +101,12 @@ BENCHMARK_Simhasher_binaryStringToUint64_isEqual_10k        0.000 ns        0.00
 BENCHMARK_Simhasher_binaryStringToUint64_isEqual_1000k      0.000 ns        0.000 ns   1000000000
 ```
 
+## Python Binder
+构建包, 以py3.7为例:
+```sh
+cmake ../ -DPYBIND=ON -DPYTHON_EXECUTABLE="/usr/bin/python3.7"
+```
+
 ## 客服
 
 + Email: `i@yanyiwu.com`
