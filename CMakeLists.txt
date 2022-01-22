@@ -2,6 +2,8 @@ PROJECT(simhash)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+OPTION(BENCHMARK "Build benchmarking library" ON)
+
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/deps
   ${PROJECT_SOURCE_DIR}/include)
 
@@ -12,6 +14,7 @@ endif()
 
 ADD_SUBDIRECTORY(example)
 ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(benchmark)
 
 ENABLE_TESTING()
 ADD_TEST(NAME ./test/test.run COMMAND ./test/test.run)
