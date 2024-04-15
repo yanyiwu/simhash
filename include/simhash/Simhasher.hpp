@@ -20,7 +20,8 @@ namespace simhash
 
             bool extract(const string& text, vector<pair<string,double> > & res, size_t topN) const
             {
-                return _extractor.Extract(text, res, topN);
+                _extractor.Extract(text, res, topN);
+                return true;
             }
             bool make(const string& text, size_t topN, vector<pair<uint64_t, double> >& res) const
             {
