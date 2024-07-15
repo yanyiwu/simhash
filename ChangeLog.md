@@ -1,5 +1,13 @@
 # Simhash ChangeLog
 
+## v1.1.0
+
++ [submodule] using git submodule, and add submodules/limonp.
++ [pr-28] merged.
++ [pr-27] merged.
++ [pr-26] merged.
++ [pr-21] merged.
+
 ## v1.0.0
 
 + [deps] update limonp to v0.6.2
