@@ -16,7 +16,7 @@ static bool loadFile2Str(const string& filePath, string& s)
 
 TEST(SimhasherTest, Test1)
 {
-    Simhasher shash("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
+    Simhasher shash("../submodules/cppjieba/dict/jieba.dict.utf8", "../submodules/cppjieba/dict/hmm_model.utf8", "../submodules/cppjieba/dict/idf.utf8", "../submodules/cppjieba/dict/stop_words.utf8");
     {
         string s;
         ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));

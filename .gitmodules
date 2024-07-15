@@ -1,6 +1,3 @@
-[submodule "submodules/limonp"]
-	path = submodules/limonp
-	url = https://github.com/yanyiwu/limonp.git
 [submodule "submodules/cppjieba"]
 	path = submodules/cppjieba
 	url = https://github.com/yanyiwu/cppjieba.git

@@ -17,8 +17,8 @@ namespace simhash_benchmark {
 
 
 Simhasher simhasher(
-  "../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", 
-  "../dict/idf.utf8", "../dict/stop_words.utf8");
+  "../submodules/cppjieba/dict/jieba.dict.utf8", "../submodules/cppjieba/dict/hmm_model.utf8", 
+  "../submodules/cppjieba/dict/idf.utf8", "../submodules/cppjieba/dict/stop_words.utf8");
 
 
 /// Text with length 50 chars.

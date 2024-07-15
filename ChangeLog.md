@@ -2,7 +2,7 @@
 
 ## Next
 
-+ [submodule] add submodules/cppjieba, and remove deps/cppjieba
++ [submodule] add submodules/cppjieba, and remove deps/cppjieba/ and remove dict/
 
 ## v1.1.0
 

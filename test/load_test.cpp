@@ -7,7 +7,7 @@ using namespace simhash;
 
 void LoadTest(size_t times = 2000)
 {
-    Simhasher simhasher("../dict/jieba.dict.utf8", "../dict/hmm_model.utf8", "../dict/idf.utf8", "../dict/stop_words.utf8");
+    Simhasher simhasher("../submodules/cppjieba/dict/jieba.dict.utf8", "../submodules/cppjieba/dict/hmm_model.utf8", "../submodules/cppjieba/dict/idf.utf8", "../submodules/cppjieba/dict/stop_words.utf8");
     uint64_t value;
     string doc;
     
