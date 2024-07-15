@@ -26,6 +26,10 @@
 ## 用法
 
 ```sh
+git clone https://github.com/yanyiwu/simhash.git
+cd simhash
+git submodule init
+git submodule update
 mkdir build
 cd build
 cmake ..
