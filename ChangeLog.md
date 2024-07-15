@@ -1,5 +1,9 @@
 # Simhash ChangeLog
 
+## Next
+
++ [submodule] add submodules/cppjieba, and remove deps/cppjieba
+
 ## v1.1.0
 
 + [submodule] using git submodule, and add submodules/limonp.
