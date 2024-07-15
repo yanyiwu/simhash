@@ -5,6 +5,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #OPTION(BENCHMARK "Build benchmarking library" ON)
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/deps
+  ${PROJECT_SOURCE_DIR}/submodules/limonp/include
   ${PROJECT_SOURCE_DIR}/include)
 
 ADD_DEFINITIONS(-O3 -Wall -g)
