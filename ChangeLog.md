@@ -1,6 +1,6 @@
 # Simhash ChangeLog
 
-## Next
+## v1.1.1
 
 + [submodule] add submodules/cppjieba, and remove deps/cppjieba/ and remove dict/
 
