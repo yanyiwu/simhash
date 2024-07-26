@@ -1,4 +1,8 @@
-# Simhash ChangeLog
+# ChangeLog
+
+## Next Version
+
++ [googletest] git submodule add googletest-1.6.0
 
 ## v1.1.1
 
