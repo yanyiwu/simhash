@@ -1,7 +1,7 @@
 # 专门针对中文文档的simhash算法库
 
 [![Test](https://github.com/yanyiwu/simhash/actions/workflows/cmake.yml/badge.svg)](https://github.com/yanyiwu/simhash/actions/workflows/cmake.yml)
-[![Platform](https://img.shields.io/badge/platform-Linux,%20OS%20X,%20Windows-green.svg?style=flat)](https://github.com/yanyiwu/simhash)
+[![Platform](https://img.shields.io/badge/platform-Linux,macOS-green.svg?style=flat)](https://github.com/yanyiwu/simhash)
 [![Author](https://img.shields.io/badge/author-@yanyiwu-blue.svg?style=flat)](http://yanyiwu.com/) 
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://yanyiwu.mit-license.org)
 [![Tag](https://img.shields.io/github/v/tag/yanyiwu/simhash.svg)](https://github.com/yanyiwu/simhash/releases)

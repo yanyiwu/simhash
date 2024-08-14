@@ -1,5 +1,11 @@
 # ChangeLog
 
+## v1.2.1
+
++ [submodule] cppjieba v5.1.2 -> v5.3.0
++ [CI] macos,linux and c++[11,14,17,20]
++ [CMake] mini_required 2.6->3.5
+
 ## v1.2.0
 
 + [googletest] git submodule add googletest-1.6.0
