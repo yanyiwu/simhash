@@ -1,13 +1,22 @@
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/test)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/test/lib)
 
-SET(GTEST_ROOT_DIR googletest)
-INCLUDE_DIRECTORIES(${GTEST_ROOT_DIR} ${GTEST_ROOT_DIR}/include)
-ADD_DEFINITIONS(-DGTEST_USE_OWN_TR1_TUPLE=1)
-ADD_LIBRARY(gtest STATIC ${GTEST_ROOT_DIR}/src/gtest-all.cc)
-TARGET_LINK_LIBRARIES(gtest pthread)
+
+if (MSVC)
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+endif()
+
+include(FetchContent)
+
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG release-1.12.0
+)
+FetchContent_MakeAvailable(googletest)
+
 
 ADD_EXECUTABLE(test.run gtest_main.cpp  TJenkins.cpp  TSimhash.cpp)
-TARGET_LINK_LIBRARIES(gtest pthread)
-TARGET_LINK_LIBRARIES(test.run gtest pthread)
+TARGET_LINK_LIBRARIES(test.run gtest)
 
