@@ -1,5 +1,10 @@
 # ChangeLog
 
+## v1.2.2
+
++ [googletest] removed submodule and add cmake-fetchcontent
++ [submodule] cppjieba v5.3.0 -> v5.3.1
+
 ## v1.2.1
 
 + [submodule] cppjieba v5.1.2 -> v5.3.0
