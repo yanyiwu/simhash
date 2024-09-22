@@ -26,12 +26,10 @@ if(simhash_BUILD_TESTS)
 	    set(CMAKE_CXX_STANDARD 11)
 	endif()
 
-	ADD_SUBDIRECTORY(example)
 	ADD_SUBDIRECTORY(test)
 	ADD_SUBDIRECTORY(benchmark)
 
 	ENABLE_TESTING()
 	ADD_TEST(NAME ./test/test.run COMMAND ./test/test.run)
 	ADD_TEST(NAME ./test/load_test COMMAND ./test/load_test)
-	ADD_TEST(NAME ./demo COMMAND ./demo)
 endif()
