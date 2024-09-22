@@ -1,5 +1,12 @@
 # ChangeLog
 
+## v1.2.3
+
++ class Simhasher: using cppjieba::Jieba instead of cppjieba::keywordextractor
++ [submodule/cppjieba] v5.3.1 -> v5.4.0
++ cmake: avoid testing when FetchContent by other project
++ [stale-issues] stale 1 year ago
+
 ## v1.2.2
 
 + [googletest] removed submodule and add cmake-fetchcontent
