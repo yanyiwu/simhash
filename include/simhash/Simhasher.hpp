@@ -14,7 +14,7 @@ namespace simhash
             jenkins _hasher;
 	    cppjieba::Jieba _jieba;
         public:
-            Simhasher(const string& dictPath, const string& modelPath, const string& idfPath, const string& stopWords): _jieba(dictPath, modelPath, "", idfPath, stopWords)
+            Simhasher(const string& dictPath = "", const string& modelPath = "", const string& idfPath = "", const string& stopWords = ""): _jieba(dictPath, modelPath, "", idfPath, stopWords)
             {}
             ~Simhasher(){};
 
