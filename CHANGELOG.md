@@ -1,5 +1,11 @@
 # ChangeLog
 
+## v1.3.0
+
++ [api] class Simhasher: default argument supported
++ README: add https://github.com/yanyiwu/simhash-demo
++ demo: removed example/demo.cpp and using github.com/yanyiwu/simhash-demo instead
+
 ## v1.2.3
 
 + class Simhasher: using cppjieba::Jieba instead of cppjieba::keywordextractor
