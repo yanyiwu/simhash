@@ -2,7 +2,7 @@ name: Close Stale Issues
 
 on:
   schedule:
-    - cron: '0 13 * * 5'  # Run Friday Weekly
+    - cron: '0 13 12 * *'  # Run every 12th day of the month
 
 jobs:
   stale:
