@@ -5,6 +5,7 @@
 [![Author](https://img.shields.io/badge/author-@yanyiwu-blue.svg?style=flat)](http://yanyiwu.com/) 
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://yanyiwu.mit-license.org)
 [![Tag](https://img.shields.io/github/v/tag/yanyiwu/simhash.svg)](https://github.com/yanyiwu/simhash/releases)
+[<img src="https://api.gitsponsors.com/api/badge/img?id=15222409" height="20">](https://api.gitsponsors.com/api/badge/link?p=FVJ41w+wf73ouEccs8M3ZhhXoUc9u71aqYpvi3qBWdf27Fleb5DGUTphqo0cyxDYcBe4y+EEpX+uYqCheRt6inY0tZE5y4QuZE84kLFM/NgrSAjkNMv8JxPbBAhIRCFG9JCoQqMTs5e3MluPHO6hpg==)
 
 ## 简介
 
