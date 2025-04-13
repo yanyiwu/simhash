@@ -23,11 +23,17 @@ jobs:
         cpp_version: [11, 14, 17, 20]
         build_type: [Release, Debug]
 
-
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
-          submodules: recursive
+        submodules: true
+        fetch-depth: 0
+
+    - name: Update submodules
+      run: |
+        git submodule update --init --recursive --remote
+        cd submodules/cppjieba
+        git checkout master
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DBUILD_TESTING=ON -DCMAKE_CXX_STANDARD=${{matrix.cpp_version}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
