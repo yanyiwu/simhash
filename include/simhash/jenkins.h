@@ -40,9 +40,15 @@
 
 #include <cstring>      /* defined size_t */
 #include <stdint.h>     /* defines uint32_t etc */
-#include <sys/param.h>  /* attempt to define endianness */
-#ifdef linux
-# include <endian.h>    /* attempt to define endianness */
+
+#ifdef _WIN32
+# define HASH_LITTLE_ENDIAN 1
+# define HASH_BIG_ENDIAN 0
+#else
+# include <sys/param.h>  /* attempt to define endianness */
+# ifdef linux
+#  include <endian.h>    /* attempt to define endianness */
+# endif
 #endif
 
 #define rot(x,k) (((x)<<(k)) | ((x)>>(32-(k))))
