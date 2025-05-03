@@ -17,8 +17,8 @@ jobs:
           ubuntu-22.04, 
           macos-13,
           macos-14,
-          #windows-2019,
-          #windows-2022,
+          windows-2019,
+          windows-2022,
         ]  
         cpp_version: [11, 14, 17, 20]
         build_type: [Release, Debug]
