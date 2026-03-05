@@ -87,3 +87,41 @@ TEST(SimhasherTest, Test2)
     
 }
 
+TEST(SimhasherTest, TestGetTopN)
+{
+    // Very short text should return the minimum topN of 5.
+    string shortText(100, 'a');
+    ASSERT_EQ(Simhasher::getTopN(shortText), (size_t)5);
+
+    // Text of exactly 600 bytes: 600/120 = 5 → still 5 (minimum).
+    string text600(600, 'a');
+    ASSERT_EQ(Simhasher::getTopN(text600), (size_t)5);
+
+    // Text of 1200 bytes: 1200/120 = 10.
+    string text1200(1200, 'a');
+    ASSERT_EQ(Simhasher::getTopN(text1200), (size_t)10);
+
+    // Text of 7800 bytes: 7800/120 = 65.
+    string text7800(7800, 'a');
+    ASSERT_EQ(Simhasher::getTopN(text7800), (size_t)65);
+
+    // Very long text should be capped at the maximum topN of 200.
+    string longText(30000, 'a');
+    ASSERT_EQ(Simhasher::getTopN(longText), (size_t)200);
+}
+
+TEST(SimhasherTest, TestAdaptiveMake)
+{
+    Simhasher shash("../submodules/cppjieba/dict/jieba.dict.utf8", "../submodules/cppjieba/dict/hmm_model.utf8", "../submodules/cppjieba/dict/idf.utf8", "../submodules/cppjieba/dict/stop_words.utf8");
+
+    // Verify that the adaptive make() overload (no explicit topN) produces the same
+    // result as calling make() with getTopN() explicitly.
+    string s;
+    ASSERT_TRUE(loadFile2Str("../test/testdata/news_content", s));
+
+    uint64_t u_adaptive, u_explicit;
+    ASSERT_TRUE(shash.make(s, u_adaptive));
+    ASSERT_TRUE(shash.make(s, Simhasher::getTopN(s), u_explicit));
+    ASSERT_EQ(u_adaptive, u_explicit);
+}
+
