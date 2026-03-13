@@ -15,9 +15,7 @@ jobs:
         os: [ 
           ubuntu-22.04, 
           ubuntu-24.04, 
-          macos-13,
           macos-14,
-          windows-2019,
           windows-2022,
         ]  
         cpp_version: [11, 14, 17, 20]
@@ -44,4 +42,3 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{matrix.build_type}} --output-on-failure --verbose
-
