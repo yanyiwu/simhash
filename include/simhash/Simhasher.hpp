@@ -106,6 +106,39 @@ namespace simhash
                 return v64;
             }
 
+            /**
+             * @brief
+             * Compute a recommended topN (number of keywords) for the given text.
+             *
+             * For Chinese UTF-8 text, each character is roughly 3 bytes and each word
+             * is roughly 2 characters (~6 bytes).  A good rule of thumb is to extract
+             * approximately one keyword per 120 bytes of input, clamped to [5, 200].
+             *
+             * Example expected values:
+             *   text.size() <=  600 bytes  → topN =  5
+             *   text.size() ~  1200 bytes  → topN = 10
+             *   text.size() ~  7800 bytes  → topN = 65
+             *   text.size() >= 24000 bytes → topN = 200 (cap)
+             *
+             * Users who need tighter control can still pass an explicit topN to make().
+             */
+            static size_t getTopN(const string& text)
+            {
+                const size_t topNMin = 5;
+                const size_t topNMax = 200;
+                return std::max(topNMin, std::min(topNMax, text.size() / 120));
+            }
+
+            /**
+             * @brief
+             * Adaptive overload: topN is chosen automatically via getTopN().
+             * Suitable when the caller does not want to tune topN manually.
+             */
+            bool make(const string& text, uint64_t& v64) const
+            {
+                return make(text, getTopN(text), v64);
+            }
+
             static bool isEqual(uint64_t lhs, uint64_t rhs, unsigned short n = 3)
             {
                 unsigned short cnt = 0;
