@@ -54,6 +54,37 @@ simhash值是: 17831459094038722629
 
 详情请看 [demo](https://github.com/yanyiwu/simhash-demo)
 
+### 关键词数量（topN）的设置
+
+`make()` 函数的 `topN` 参数控制从文本中抽取多少个关键词来参与 simhash 计算。关键词越多，指纹对文本内容的覆盖越全面，但计算开销也随之增加。
+
+**不同大小的文件应该使用不同的 topN：**
+
+| 文本长度（字节） | 建议 topN |
+|:---:|:---:|
+| ≤ 600   | 5   |
+| ~1200   | 10  |
+| ~7800   | 65  |
+| ≥ 24000 | 200 |
+
+**自动选择 topN（推荐）：**
+
+可以使用 `Simhasher::getTopN(text)` 获取自动推荐的 topN 值（规则：`max(5, min(200, text.size() / 120))`），
+或直接调用无需手动指定 topN 的 `make(text, v64)` 重载，它会自动调用 `getTopN()`:
+
+```cpp
+Simhasher shash(DICT_PATH, HMM_PATH, IDF_PATH, STOP_WORDS_PATH);
+string text = /* 读入文本 */;
+
+// 方法一：自动确定 topN
+uint64_t simhashValue;
+shash.make(text, simhashValue);
+
+// 方法二：手动查询推荐值后再调用
+size_t topN = Simhasher::getTopN(text);
+shash.make(text, topN, simhashValue);
+```
+
 ### Benchmark
 ```sh
 ./benchmark/benchmarking
