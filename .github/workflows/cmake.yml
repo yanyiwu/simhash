@@ -12,17 +12,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ 
-          ubuntu-22.04, 
-          ubuntu-24.04, 
-          macos-14,
-          windows-2022,
-        ]  
+        os:
+          - ubuntu-22.04
+          - ubuntu-latest
+          - macos-14
+          - macos-latest
+          - windows-2022
+          - windows-latest
         cpp_version: [11, 14, 17, 20]
         build_type: [Release, Debug]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
         fetch-depth: 0
