@@ -17,7 +17,6 @@ if(simhash_BUILD_TESTS)
 	#OPTION(BENCHMARK "Build benchmarking library" ON)
 
 	INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/submodules/cppjieba/include
-	  ${PROJECT_SOURCE_DIR}/submodules/cppjieba/deps/limonp/include
 	  ${PROJECT_SOURCE_DIR}/include)
 
 	ADD_DEFINITIONS(-O3 -g)
